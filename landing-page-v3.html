@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareCompass — Remember. Document. Share. (We never diagnose.)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal: #0D9488;
+            --teal-dark: #0F766E;
+            --teal-light: #CCFBF1;
+            --teal-lighter: #F0FDFA;
+            --cream: #FFFDF7;
+            --warm-white: #FBF8F3;
+            --navy: #1A1F36;
+            --navy-soft: #2D3142;
+            --sage: #7FB069;
+            --sage-light: #E8F5E0;
+            --coral: #E8735A;
+            --coral-light: #FFF0ED;
+            --gold: #F2A541;
+            --gold-light: #FFF4E0;
+            --lavender: #9B8EC4;
+            --lavender-light: #F0ECF8;
+            --text: #1A1F36;
+            --text-secondary: #5A5F72;
+            --text-muted: #8E92A4;
+            --bg: #FFFFFF;
+            --border: #E8E6E1;
+            --border-light: #F5F3EF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            background: var(--cream);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Work Sans', sans-serif;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 253, 247, 0.92);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(232, 230, 225, 0.6);
+            transition: all 0.4s ease;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .nav-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+
+        .nav-logo-text {
+            font-family: 'Work Sans', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--teal); }
+
+        .nav-cta {
+            background: var(--navy) !important;
+            color: white !important;
+            padding: 12px 28px !important;
+            border-radius: 100px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s !important;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(26, 31, 54, 0.3);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 140px 48px 100px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, var(--cream) 0%, var(--warm-white) 100%);
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-disclaimer {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: var(--coral-light);
+            border: 1px solid rgba(232, 115, 90, 0.2);
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--coral);
+            margin-bottom: 32px;
+        }
+
+        .hero h1 {
+            font-size: 60px;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 24px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero h1 .highlight {
+            color: var(--teal);
+        }
+
+        .hero h1 .disclaimer-text {
+            color: var(--coral);
+            font-weight: 600;
+        }
+
+        .hero-subtitle {
+            font-size: 19px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-ctas {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 36px;
+            background: var(--teal);
+            color: white;
+            border: none;
+            border-radius: 100px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(13, 148, 136, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--teal-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(13, 148, 136, 0.4);
+        }
+
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 32px;
+            background: transparent;
+            color: var(--navy);
+            border: 2px solid var(--border);
+            border-radius: 100px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--navy);
+            background: white;
+        }
+
+        /* Trust Badges */
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .trust-badge.dont {
+            color: var(--coral);
+        }
+
+        .trust-badge.do {
+            color: var(--teal);
+        }
+
+        .trust-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .trust-icon.dont {
+            background: var(--coral-light);
+            color: var(--coral);
+        }
+
+        .trust-icon.do {
+            background: var(--teal-light);
+            color: var(--teal-dark);
+        }
+
+        /* Hero Visual */
+        .hero-visual {
+            margin-top: 60px;
+            position: relative;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-phone-grid {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            position: relative;
+        }
+
+        .hero-phone {
+            width: 260px;
+            background: var(--navy);
+            border-radius: 36px;
+            padding: 12px;
+            box-shadow: 0 30px 80px rgba(26, 31, 54, 0.2);
+            transition: transform 0.4s;
+        }
+
+        .hero-phone:hover {
+            transform: translateY(-8px);
+        }
+
+        .hero-phone-inner {
+            background: var(--cream);
+            border-radius: 28px;
+            height: 460px;
+            overflow: hidden;
+        }
+
+        .phone-notch {
+            width: 100px;
+            height: 24px;
+            background: var(--navy);
+            border-radius: 0 0 16px 16px;
+            margin: 0 auto;
+        }
+
+        .phone-content {
+            padding: 12px 16px;
+        }
+
+        .phone-label {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Shield Overlay */
+        .shield-badge {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border: 2px solid var(--teal);
+            border-radius: 100px;
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--teal-dark);
+            box-shadow: 0 8px 32px rgba(13, 148, 136, 0.2);
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        /* ===== STORIES SECTION ===== */
+        .stories {
+            padding: 120px 48px;
+            background: white;
+        }
+
+        .section-center {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 80px;
+        }
+
+        .section-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            background: var(--teal-light);
+            color: var(--teal-dark);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 44px;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            font-size: 18px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .stories-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 80px;
+        }
+
+        .story-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .story-row.reverse { direction: rtl; }
+        .story-row.reverse > * { direction: ltr; }
+
+        .story-illustration {
+            aspect-ratio: 4/3;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        .story-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .story-content h3 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 16px;
+            line-height: 1.25;
+        }
+
+        .story-quote {
+            background: var(--warm-white);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .story-quote p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .story-solution {
+            padding: 20px;
+            background: var(--teal-lighter);
+            border-radius: 16px;
+            border: 1px solid rgba(13, 148, 136, 0.1);
+        }
+
+        .story-solution-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--teal-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .story-solution p {
+            font-size: 15px;
+            color: var(--navy);
+            line-height: 1.6;
+        }
+
+        .story-solution .no-diagnosis {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            padding: 6px 12px;
+            background: white;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--coral);
+        }
+
+        /* ===== WHAT WE DO / DON'T DO ===== */
+        .do-dont {
+            padding: 120px 48px;
+            background: var(--warm-white);
+        }
+
+        .do-dont-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .do-card, .dont-card {
+            border-radius: 24px;
+            padding: 40px;
+        }
+
+        .do-card {
+            background: white;
+            border: 2px solid var(--teal);
+        }
+
+        .dont-card {
+            background: white;
+            border: 2px solid var(--coral);
+        }
+
+        .do-dont-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .do-dont-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .do-dont-title {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .do-card .do-dont-icon { background: var(--teal-light); }
+        .do-card .do-dont-title { color: var(--teal-dark); }
+        .dont-card .do-dont-icon { background: var(--coral-light); }
+        .dont-card .do-dont-title { color: var(--coral); }
+
+        .do-dont-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .do-dont-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .do-card .do-dont-list li { color: var(--text); }
+        .dont-card .do-dont-list li { color: var(--text-secondary); }
+
+        .do-dont-list li span {
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+
+        /* ===== FEATURES ===== */
+        .features {
+            padding: 120px 48px;
+            background: white;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: var(--warm-white);
+            border-radius: 20px;
+            padding: 28px 24px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+            border-color: var(--teal);
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .feature-no-diagnosis {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--coral-light);
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--coral);
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .how-it-works {
+            padding: 120px 48px;
+            background: var(--navy);
+        }
+
+        .how-it-works .section-eyebrow {
+            background: rgba(13, 148, 136, 0.2);
+            color: var(--teal-light);
+        }
+
+        .how-it-works .section-title { color: white; }
+        .how-it-works .section-desc { color: rgba(255,255,255,0.7); }
+
+        .steps-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 24px;
+            box-shadow: 0 8px 32px rgba(13, 148, 136, 0.4);
+        }
+
+        .step h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .step p {
+            font-size: 15px;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.6;
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonials {
+            padding: 120px 48px;
+            background: var(--warm-white);
+        }
+
+        .testimonials-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .testimonial-card:hover {
+            box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+            transform: translateY(-4px);
+        }
+
+        .testimonial-stars {
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        .testimonial-text {
+            font-size: 16px;
+            color: var(--navy);
+            line-height: 1.7;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .testimonial-name {
+            font-weight: 700;
+            color: var(--navy);
+            font-size: 15px;
+        }
+
+        .testimonial-role {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ===== PRICING ===== */
+        .pricing {
+            padding: 120px 48px;
+            background: white;
+        }
+
+        .pricing-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 28px;
+            border: 2px solid var(--border);
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--teal);
+            transform: scale(1.05);
+            box-shadow: 0 20px 60px rgba(13, 148, 136, 0.15);
+        }
+
+        .pricing-popular {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--teal);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .pricing-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+
+        .pricing-price {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 4px;
+        }
+
+        .pricing-price span {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .pricing-period {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 28px;
+        }
+
+        .pricing-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .pricing-features li:last-child { border-bottom: none; }
+
+        .pricing-check {
+            color: var(--teal);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .pricing-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .pricing-btn-primary {
+            background: var(--teal);
+            color: white;
+            box-shadow: 0 4px 16px rgba(13, 148, 136, 0.3);
+        }
+
+        .pricing-btn-primary:hover {
+            background: var(--teal-dark);
+            transform: translateY(-2px);
+        }
+
+        .pricing-btn-secondary {
+            background: white;
+            color: var(--navy);
+            border: 2px solid var(--border);
+        }
+
+        .pricing-btn-secondary:hover {
+            border-color: var(--navy);
+        }
+
+        .pricing-note {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 16px;
+        }
+
+        /* ===== FAQ ===== */
+        .faq {
+            padding: 120px 48px;
+            background: var(--warm-white);
+        }
+
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 24px 0;
+            background: none;
+            border: none;
+            text-align: left;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--navy);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            transition: color 0.3s;
+        }
+
+        .faq-question:hover { color: var(--teal); }
+
+        .faq-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--teal);
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .faq-item.open .faq-icon {
+            background: var(--teal);
+            color: white;
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 200px;
+        }
+
+        .faq-answer p {
+            padding: 0 0 24px;
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ===== FINAL CTA ===== */
+        .final-cta {
+            padding: 120px 48px;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .final-cta h2 {
+            font-size: 48px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .final-cta p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.7;
+            margin-bottom: 36px;
+        }
+
+        .btn-white {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 40px;
+            background: white;
+            color: var(--teal-dark);
+            border: none;
+            border-radius: 100px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .btn-white:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 60px 48px 32px;
+            background: var(--navy);
+            color: rgba(255,255,255,0.7);
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+        }
+
+        .footer-brand h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-brand p {
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 300px;
+        }
+
+        .footer-col h4 {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links a {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover { color: white; }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .footer-disclaimer {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .hero h1 { font-size: 44px; }
+            .story-row { grid-template-columns: 1fr; }
+            .story-row.reverse { direction: ltr; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+            .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+            .pricing-card.featured { transform: none; }
+            .do-dont-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .nav { padding: 12px 20px; }
+            .nav-links { display: none; }
+            .hero { padding: 100px 20px 60px; }
+            .hero h1 { font-size: 32px; }
+            .hero-ctas { flex-direction: column; align-items: center; }
+            .trust-badges { flex-direction: column; align-items: center; }
+            .hero-phone-grid { flex-direction: column; align-items: center; }
+            .stories, .features, .do-dont, .how-it-works, .testimonials, .pricing, .faq { padding: 80px 20px; }
+            .section-title { font-size: 32px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .steps-container { grid-template-columns: 1fr; }
+            .testimonials-grid { grid-template-columns: 1fr; }
+            .final-cta { padding: 80px 20px; }
+            .final-cta h2 { font-size: 32px; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="#" class="nav-logo">
+            <div class="nav-logo-icon">🧭</div>
+            <span class="nav-logo-text">CareCompass</span>
+        </a>
+        <div class="nav-links">
+            <a href="#stories">Stories</a>
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+            <a href="#" class="nav-cta">Start Free</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-disclaimer">
+                🛡️ Documentation only. We never diagnose, prescribe, or replace your doctor.
+            </div>
+
+            <h1>Remember. Document. Share.<br><span class="disclaimer-text">(We never diagnose.)</span></h1>
+
+            <p class="hero-subtitle">
+                We're not doctors. We don't prescribe. We don't tell you what's wrong. We help you track your medications, symptoms, meals, and test results — then organize it all into a clear report you can hand to your real healthcare provider.
+            </p>
+
+            <div class="hero-ctas">
+                <a href="#" class="btn-primary">Start Documenting — Free Forever</a>
+                <a href="#how-it-works" class="btn-ghost">See How It Works</a>
+            </div>
+
+            <div class="trust-badges">
+                <div class="trust-badge dont">
+                    <div class="trust-icon dont">✕</div>
+                    We do not diagnose
+                </div>
+                <div class="trust-badge dont">
+                    <div class="trust-icon dont">✕</div>
+                    We do not prescribe
+                </div>
+                <div class="trust-badge dont">
+                    <div class="trust-icon dont">✕</div>
+                    Not a medical device
+                </div>
+                <div class="trust-badge do">
+                    <div class="trust-icon do">✓</div>
+                    We help you collect & communicate
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="shield-badge">
+                    🛡️ No diagnosis. Documentation only.
+                </div>
+                <div class="hero-phone-grid">
+                    <div>
+                        <div class="hero-phone">
+                            <div class="hero-phone-inner">
+                                <div class="phone-notch"></div>
+                                <div class="phone-content">
+                                    <div style="text-align:center;margin:16px 0;">
+                                        <div style="font-size:28px;margin-bottom:4px;">🧭</div>
+                                        <div style="font-size:16px;font-weight:700;color:var(--navy);">Good morning</div>
+                                        <div style="font-size:13px;color:var(--text-muted);">Sarah · Week 28</div>
+                                    </div>
+                                    <div style="background:var(--teal-light);border-radius:10px;padding:10px;text-align:center;margin-bottom:12px;font-size:12px;font-weight:600;color:var(--teal-dark);">
+                                        🤰 Third Trimester
+                                    </div>
+                                    <div style="display:flex;gap:6px;margin-bottom:12px;">
+                                        <div style="flex:1;text-align:center;padding:8px;background:white;border-radius:10px;border:1px solid var(--border);">
+                                            <div style="font-size:16px;font-weight:800;color:var(--teal);">92%</div>
+                                            <div style="font-size:9px;color:var(--text-muted);">Meds</div>
+                                        </div>
+                                        <div style="flex:1;text-align:center;padding:8px;background:white;border-radius:10px;border:1px solid var(--border);">
+                                            <div style="font-size:16px;font-weight:800;color:var(--teal);">84</div>
+                                            <div style="font-size:9px;color:var(--text-muted);">Days</div>
+                                        </div>
+                                    </div>
+                                    <div style="background:var(--gold-light);border-radius:8px;padding:8px;font-size:10px;color:#92400E;">
+                                        💡 Headaches increased this week
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="phone-label">Dashboard</div>
+                    </div>
+
+                    <div>
+                        <div class="hero-phone">
+                            <div class="hero-phone-inner">
+                                <div class="phone-notch"></div>
+                                <div class="phone-content">
+                                    <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:12px;">How are you feeling?</div>
+                                    <div style="display:flex;gap:6px;margin-bottom:12px;">
+                                        <div style="flex:1;text-align:center;padding:8px;background:white;border-radius:8px;border:1px solid var(--border);">
+                                            <div style="font-size:18px;">😊</div>
+                                            <div style="font-size:9px;color:var(--text-muted);">Good</div>
+                                        </div>
+                                        <div style="flex:1;text-align:center;padding:8px;background:var(--teal-lighter);border-radius:8px;border:1px solid var(--teal);">
+                                            <div style="font-size:18px;">🙂</div>
+                                            <div style="font-size:9px;color:var(--teal);">Okay</div>
+                                        </div>
+                                        <div style="flex:1;text-align:center;padding:8px;background:white;border-radius:8px;border:1px solid var(--border);">
+                                            <div style="font-size:18px;">😔</div>
+                                            <div style="font-size:9px;color:var(--text-muted);">Low</div>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                                        <span style="font-size:11px;color:var(--text-muted);width:50px;">Nausea</span>
+                                        <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+                                            <div style="width:40%;height:100%;background:var(--gold);border-radius:3px;"></div>
+                                        </div>
+                                        <span style="font-size:11px;font-weight:700;color:var(--gold);">4</span>
+                                    </div>
+                                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                                        <span style="font-size:11px;color:var(--text-muted);width:50px;">Headache</span>
+                                        <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+                                            <div style="width:70%;height:100%;background:var(--coral);border-radius:3px;"></div>
+                                        </div>
+                                        <span style="font-size:11px;font-weight:700;color:var(--coral);">7</span>
+                                    </div>
+                                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                                        <span style="font-size:11px;color:var(--text-muted);width:50px;">Fatigue</span>
+                                        <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;">
+                                            <div style="width:80%;height:100%;background:var(--lavender);border-radius:3px;"></div>
+                                        </div>
+                                        <span style="font-size:11px;font-weight:700;color:var(--lavender);">8</span>
+                                    </div>
+                                    <div style="background:var(--warm-white);border-radius:8px;padding:8px;font-size:10px;color:var(--text-muted);">
+                                        📝 Notes for doctor...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="phone-label">Symptom Journal</div>
+                    </div>
+
+                    <div>
+                        <div class="hero-phone">
+                            <div class="hero-phone-inner">
+                                <div class="phone-notch"></div>
+                                <div class="phone-content">
+                                    <div style="text-align:center;margin:16px 0;">
+                                        <div style="font-size:28px;margin-bottom:8px;">📋</div>
+                                        <div style="font-size:14px;font-weight:700;color:var(--navy);">Visit Summary Ready</div>
+                                        <div style="font-size:11px;color:var(--text-muted);">For Dr. Patel · June 26</div>
+                                    </div>
+                                    <div style="background:var(--warm-white);border-radius:10px;padding:10px;margin-bottom:10px;">
+                                        <div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-bottom:6px;">SYMPTOMS (14 DAYS)</div>
+                                        <div style="font-size:11px;color:var(--text);">Headache: 8/14 days, avg 5/10</div>
+                                        <div style="font-size:11px;color:var(--text);">Fatigue: 12/14 days, avg 6/10</div>
+                                    </div>
+                                    <div style="background:var(--warm-white);border-radius:10px;padding:10px;margin-bottom:10px;">
+                                        <div style="font-size:10px;font-weight:700;color:var(--text-muted);margin-bottom:6px;">MEDICATIONS</div>
+                                        <div style="font-size:11px;color:var(--text);">Labetalol 200mg 2x/day</div>
+                                        <div style="font-size:11px;color:var(--text);">Iron 325mg daily</div>
+                                    </div>
+                                    <div style="background:var(--teal-light);border-radius:8px;padding:8px;text-align:center;font-size:11px;font-weight:600;color:var(--teal-dark);">
+                                        📤 Print or Share
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="phone-label">Provider Report</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stories Section -->
+    <section class="stories" id="stories">
+        <div class="section-center">
+            <div class="section-eyebrow">💜 Real Patient Voices</div>
+            <h2 class="section-title">We listened. Then we built.</h2>
+            <p class="section-desc">Every feature comes from a real person telling us what they need. Here's how we answered — without ever pretending to be your doctor.</p>
+        </div>
+
+        <div class="stories-grid">
+            <div class="story-row">
+                <div class="story-illustration" style="background: linear-gradient(135deg, var(--coral-light), #FFF5F2);">
+                    💊⏰
+                </div>
+                <div class="story-content">
+                    <div class="story-number" style="background: var(--coral-light); color: var(--coral);">1</div>
+                    <h3>"I can't remember if I took my pill — and I'm afraid to guess."</h3>
+                    <div class="story-quote">
+                        <p>The alarm goes off, I snooze it, and five hours later I'm staring at the bottle wondering. So I skip it. Then I feel guilty all day.</p>
+                    </div>
+                    <div class="story-solution">
+                        <div class="story-solution-label">✦ How we helped</div>
+                        <p>Gentle reminders with one-tap logging. Missed a dose? We say "Not yet logged" — never "missed." Refill alerts before you run out.</p>
+                        <div class="no-diagnosis">🛡️ No medical advice — just a digital memory aid</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-row reverse">
+                <div class="story-illustration" style="background: linear-gradient(135deg, var(--teal-light), #F0FDFA);">
+                    📋✨
+                </div>
+                <div class="story-content">
+                    <div class="story-number" style="background: var(--teal-light); color: var(--teal-dark);">2</div>
+                    <h3>"I had all the symptoms in my head — and forgot every one."</h3>
+                    <div class="story-quote">
+                        <p>I had a list in my notes app. Of course I forgot to open it during the appointment. Another three months of no answers.</p>
+                    </div>
+                    <div class="story-solution">
+                        <div class="story-solution-label">✦ How we helped</div>
+                        <p>One-tap "Pre-visit Summary" compiles your logged symptoms, medications, and questions into a single document. Hand it to your doctor.</p>
+                        <div class="no-diagnosis">🛡️ We don't suggest what to say — you decide what matters</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-row">
+                <div class="story-illustration" style="background: linear-gradient(135deg, var(--gold-light), #FFF9ED);">
+                    🔬💡
+                </div>
+                <div class="story-content">
+                    <div class="story-number" style="background: var(--gold-light); color: #B45309;">3</div>
+                    <h3>"My test results said 'mild abnormality.' I panicked for a week."</h3>
+                    <div class="story-quote">
+                        <p>The PDF was full of medical codes. I Googled everything and convinced myself I was dying. No one explained what it actually meant.</p>
+                    </div>
+                    <div class="story-solution">
+                        <div class="story-solution-label">✦ How we helped</div>
+                        <p>Plain-language translation of common medical terms, so you can read your results without a dictionary.</p>
+                        <div class="no-diagnosis">🛡️ We translate jargon — always ask your doctor for the full picture</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-row reverse">
+                <div class="story-illustration" style="background: linear-gradient(135deg, var(--lavender-light), #F5F0FF);">
+                    🤰📊
+                </div>
+                <div class="story-content">
+                    <div class="story-number" style="background: var(--lavender-light); color: var(--lavender);">4</div>
+                    <h3>"I needed to prove my symptoms weren't just in my head."</h3>
+                    <div class="story-quote">
+                        <p>I told my provider about headaches that wouldn't stop. She wrote "mild headache." I ended up with severe preeclampsia. A printed log might have changed everything.</p>
+                    </div>
+                    <div class="story-solution">
+                        <div class="story-solution-label">✦ How we helped</div>
+                        <p>The Pregnancy Companion tracks BP, swelling, and headaches — generating objective, date-stamped trend reports you can print for your OB.</p>
+                        <div class="no-diagnosis">🛡️ You hand it over. Your doctor makes the call. We just connect the dots.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What We Do / Don't Do -->
+    <section class="do-dont">
+        <div class="section-center">
+            <div class="section-eyebrow">🛡️ Our Promise</div>
+            <h2 class="section-title">What we do. What we never do.</h2>
+        </div>
+
+        <div class="do-dont-grid">
+            <div class="do-card">
+                <div class="do-dont-header">
+                    <div class="do-dont-icon">✓</div>
+                    <div class="do-dont-title">What We Do</div>
+                </div>
+                <ul class="do-dont-list">
+                    <li><span>✓</span> Remind you to take your prescribed medication</li>
+                    <li><span>✓</span> Help you log symptoms, meals, and vitals</li>
+                    <li><span>✓</span> Generate trend reports from your own data</li>
+                    <li><span>✓</span> Translate medical jargon into plain language</li>
+                    <li><span>✓</span> Prepare a visit summary you can share</li>
+                    <li><span>✓</span> Support tracking for all bodies, all conditions</li>
+                </ul>
+            </div>
+
+            <div class="dont-card">
+                <div class="do-dont-header">
+                    <div class="do-dont-icon">✕</div>
+                    <div class="do-dont-title">What We Never Do</div>
+                </div>
+                <ul class="do-dont-list">
+                    <li><span>✕</span> Prescribe or change your medication</li>
+                    <li><span>✕</span> Diagnose any condition</li>
+                    <li><span>✕</span> Tell you what trends mean medically</li>
+                    <li><span>✕</span> Provide medical advice or treatment plans</li>
+                    <li><span>✕</span> Send data to your doctor without permission</li>
+                    <li><span>✕</span> Assume your goals or shame your habits</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="section-center">
+            <div class="section-eyebrow">✨ Features</div>
+            <h2 class="section-title">Documentation tools, not diagnostic tools</h2>
+            <p class="section-desc">Every feature helps you collect, organize, and share. None of them pretend to be your doctor.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--teal-light);">📝</div>
+                <h3>Health Journal</h3>
+                <p>Log symptoms, mood, sleep, water, pain levels, and meals. Choose what to track. We never judge your body.</p>
+                <div class="feature-no-diagnosis">🛡️ Documentation only</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--gold-light);">💊</div>
+                <h3>Medication Manager</h3>
+                <p>Reminders for every pill. Track refills and missed doses. "Consistency" score, not guilt.</p>
+                <div class="feature-no-diagnosis">🛡️ We don't prescribe</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--coral-light);">📋</div>
+                <h3>Visit Timeline</h3>
+                <p>Upload lab PDFs, add appointment notes. All searchable. Your external hard drive for health.</p>
+                <div class="feature-no-diagnosis">🛡️ Not your diagnostician</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--sage-light);">📊</div>
+                <h3>Symptom Intelligence</h3>
+                <p>See trends: "Headaches increased after starting iron." We spot patterns. You discuss with your doctor.</p>
+                <div class="feature-no-diagnosis">🛡️ Pure observation</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--lavender-light);">🤖</div>
+                <h3>AI Assistant</h3>
+                <p>Ask about YOUR data only. "Summarize my migraine log." It answers from what you've entered.</p>
+                <div class="feature-no-diagnosis">🛡️ No diagnosis, ever</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--gold-light);">🚨</div>
+                <h3>Emergency Card</h3>
+                <p>Lock-screen display: name, blood type, allergies, meds, emergency contacts. Paramedic-ready.</p>
+                <div class="feature-no-diagnosis">🛡️ Just the facts</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--coral-light);">🤰</div>
+                <h3>Pregnancy Companion</h3>
+                <p>BP trends, blood sugar, kick counter. Print reports for your OB. We show numbers — they decide.</p>
+                <div class="feature-no-diagnosis">🛡️ We don't predict</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--sage-light);">🍎</div>
+                <h3>Meal Logging</h3>
+                <p>Photo or manual entry. See food-symptom patterns. Not a diet app. For all bodies, all goals.</p>
+                <div class="feature-no-diagnosis">🛡️ No diet culture</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-center">
+            <div class="section-eyebrow">🚀 How It Works</div>
+            <h2 class="section-title">Three steps to your health story</h2>
+            <p class="section-desc">No complicated setup. No insurance needed. Just you and your data.</p>
+        </div>
+
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-circle">📝</div>
+                <h3>Log it once</h3>
+                <p>Tap your symptoms. Snap a prescription. Speak your notes. One touch, three seconds.</p>
+            </div>
+            <div class="step">
+                <div class="step-circle">🔗</div>
+                <h3>We connect the dots</h3>
+                <p>Timelines build. Patterns emerge. Trend alerts appear in plain language you can understand.</p>
+            </div>
+            <div class="step">
+                <div class="step-circle">📋</div>
+                <h3>Walk in prepared</h3>
+                <p>One tap generates your summary. Hand it to your doctor. They make the call.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="section-center">
+            <div class="section-eyebrow">💜 Patient Stories</div>
+            <h2 class="section-title">Real impact, real people</h2>
+        </div>
+
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-text">I brought my printed symptom log and my doctor finally listened. The app didn't tell me what I had — it just gave me the proof to be taken seriously.</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar" style="background: var(--coral-light);">👩🏾</div>
+                    <div>
+                        <div class="testimonial-name">Keisha, 29</div>
+                        <div class="testimonial-role">Preeclampsia survivor</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-text">I track my meals because I have reactive hypoglycemia. Seeing what I ate before a crash helped my dietitian help me. The app never told me to "eat less."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar" style="background: var(--sage-light);">🧑🏽</div>
+                    <div>
+                        <div class="testimonial-name">Sam, 41</div>
+                        <div class="testimonial-role">Chronic illness manager</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-text">My mother has early dementia. I set up her medication reminders and food log. No one's trying to be her doctor through an app. We're just making sure she's safe.</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar" style="background: var(--lavender-light);">👨🏻</div>
+                    <div>
+                        <div class="testimonial-name">Javier, 38</div>
+                        <div class="testimonial-role">Caregiver</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="section-center">
+            <div class="section-eyebrow">💰 Simple Pricing</div>
+            <h2 class="section-title">No prescription needed to sign up</h2>
+            <p class="section-desc">This is a personal documentation tool. Start free, upgrade when you need more.</p>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-name">Basic</div>
+                <div class="pricing-price">Free</div>
+                <div class="pricing-period">Forever</div>
+                <ul class="pricing-features">
+                    <li><span class="pricing-check">✓</span> Symptom & meal journal</li>
+                    <li><span class="pricing-check">✓</span> 3 medication reminders</li>
+                    <li><span class="pricing-check">✓</span> Basic trend charts</li>
+                    <li><span class="pricing-check">✓</span> One device</li>
+                </ul>
+                <button class="pricing-btn pricing-btn-secondary">Get Started</button>
+            </div>
+
+            <div class="pricing-card featured">
+                <div class="pricing-popular">Most Popular</div>
+                <div class="pricing-name">Plus</div>
+                <div class="pricing-price">$3.99<span>/mo</span></div>
+                <div class="pricing-period">Billed monthly</div>
+                <ul class="pricing-features">
+                    <li><span class="pricing-check">✓</span> Unlimited medications</li>
+                    <li><span class="pricing-check">✓</span> Symptom intelligence</li>
+                    <li><span class="pricing-check">✓</span> AI Assistant (summaries only)</li>
+                    <li><span class="pricing-check">✓</span> PDF reports</li>
+                    <li><span class="pricing-check">✓</span> Emergency card</li>
+                    <li><span class="pricing-check">✓</span> Partner access</li>
+                </ul>
+                <button class="pricing-btn pricing-btn-primary">Start Free Trial</button>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-name">Family</div>
+                <div class="pricing-price">$6.99<span>/mo</span></div>
+                <div class="pricing-period">Billed monthly</div>
+                <ul class="pricing-features">
+                    <li><span class="pricing-check">✓</span> Everything in Plus</li>
+                    <li><span class="pricing-check">✓</span> Pregnancy Companion</li>
+                    <li><span class="pricing-check">✓</span> Caregiver mode</li>
+                    <li><span class="pricing-check">✓</span> Multi-device sync</li>
+                </ul>
+                <button class="pricing-btn pricing-btn-secondary">Start Free Trial</button>
+                <div class="pricing-note">No prescription needed. This is a documentation tool.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <div class="section-center">
+            <div class="section-eyebrow">❓ Questions</div>
+            <h2 class="section-title">Everything you need to know</h2>
+        </div>
+
+        <div class="faq-list">
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Is this a diagnostic tool?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Absolutely not. We do not interpret your data, suggest what you have, or recommend treatments. We organize what you've logged and remind you of your doctor's instructions.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Can I track food without a weight-loss goal?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Yes. That's exactly what we encourage. Our food journal is for anyone who wants to see how eating relates to symptoms, energy, or medication timing — no dieting required.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Does the AI give medical advice?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Never. It only answers questions based on the data you've entered, like "Show me my BP trend since March." It will never say "You should increase your dose."</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Will you share my data with my doctor automatically?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <p>No. You choose what to export and share. We never contact your provider without your explicit action.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Why should I use this instead of a notebook?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Because we find patterns you might miss, and we format it all into a report that saves your doctor time. But you still make the final call on what matters.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="final-cta-content">
+            <h2>You know your body.<br>We'll help you prove it.</h2>
+            <p>Start documenting your health on your own terms. No diagnoses. No prescriptions. Just the clearest picture of your health, ready to share when you're ready.</p>
+            <a href="#" class="btn-white">Create Your Free Account →</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3>🧭 CareCompass</h3>
+                <p>Your health, in your hands. A documentation tool that helps you remember, organize, and communicate — without ever pretending to be your doctor.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Product</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Pregnancy Companion</a></li>
+                    <li><a href="#">Security</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Patient Stories</a></li>
+                    <li><a href="#">Help Center</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                    <li><a href="#">HIPAA Notice</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-disclaimer">
+                CareCompass is a personal health documentation tool. We do not provide medical advice, diagnosis, or treatment. Always consult your healthcare provider for medical decisions.
+            </div>
+            <span>© 2026 CareCompass</span>
+        </div>
+    </footer>
+
+    <script>
+        function toggleFaq(button) {
+            const item = button.closest('.faq-item');
+            const wasOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+            if (!wasOpen) item.classList.add('open');
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.story-row, .feature-card, .testimonial-card, .step, .do-card, .dont-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+
+</body>
+</html>
