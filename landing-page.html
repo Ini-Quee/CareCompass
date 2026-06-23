@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareCompass — Remember Every Pill. Prove Every Symptom. Be Heard.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal: #0D9488;
+            --teal-dark: #0F766E;
+            --teal-light: #CCFBF1;
+            --teal-lighter: #F0FDFA;
+            --cream: #FFFBF5;
+            --navy: #1E293B;
+            --navy-light: #334155;
+            --sage: #6B8F71;
+            --sage-light: #E8F0E9;
+            --coral: #F97066;
+            --coral-light: #FEE2E2;
+            --gold: #F59E0B;
+            --gold-light: #FEF3C7;
+            --text: #1E293B;
+            --text-secondary: #64748B;
+            --text-muted: #94A3B8;
+            --bg: #FFFFFF;
+            --bg-alt: #F8FAFB;
+            --border: #E2E8F0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--teal);
+            text-decoration: none;
+        }
+
+        .nav-logo span { font-size: 24px; }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--teal); }
+
+        .nav-cta {
+            background: var(--teal);
+            color: white !important;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: 600 !important;
+            transition: all 0.2s;
+        }
+
+        .nav-cta:hover {
+            background: var(--teal-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 140px 40px 100px;
+            background: linear-gradient(180deg, var(--teal-lighter) 0%, var(--cream) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-content { position: relative; z-index: 2; }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--teal-light);
+            color: var(--teal-dark);
+            border-radius: 24px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 20px;
+            letter-spacing: -0.03em;
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            color: var(--teal);
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 36px;
+            max-width: 520px;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            box-shadow: 0 4px 16px rgba(13, 148, 136, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(13, 148, 136, 0.4);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            background: transparent;
+            color: var(--teal);
+            border: 2px solid var(--teal);
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background: var(--teal-lighter);
+            transform: translateY(-2px);
+        }
+
+        .trust-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .trust-badge span { font-size: 16px; }
+
+        /* Hero Illustration */
+        .hero-visual {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-illustration {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero-phone {
+            width: 280px;
+            background: var(--navy);
+            border-radius: 40px;
+            padding: 12px;
+            margin: 0 auto;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-phone-inner {
+            background: var(--cream);
+            border-radius: 32px;
+            height: 500px;
+            overflow: hidden;
+            padding: 16px;
+        }
+
+        .hero-phone-notch {
+            width: 100px;
+            height: 24px;
+            background: var(--navy);
+            border-radius: 0 0 16px 16px;
+            margin: 0 auto 12px;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-card-1 {
+            top: 40px;
+            left: -40px;
+            animation-delay: 0s;
+        }
+
+        .floating-card-2 {
+            bottom: 80px;
+            right: -30px;
+            animation-delay: 2s;
+        }
+
+        .floating-card-3 {
+            top: 180px;
+            right: -50px;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating-card-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+
+        .floating-card-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .floating-card-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--teal);
+        }
+
+        /* Pain Points Section */
+        .pain-points {
+            padding: 120px 40px;
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 80px;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: var(--teal-light);
+            color: var(--teal-dark);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .section-header h2 {
+            font-size: 40px;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 16px;
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .pain-point-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 80px;
+        }
+
+        .pain-point-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .pain-point-row.reverse { direction: rtl; }
+        .pain-point-row.reverse > * { direction: ltr; }
+
+        .pain-point-content {}
+
+        .pain-point-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--coral-light);
+            color: var(--coral);
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .pain-point-content h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .pain-point-quote {
+            background: var(--bg-alt);
+            border-left: 4px solid var(--coral);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 20px;
+        }
+
+        .pain-point-quote p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .pain-point-solution {
+            background: var(--teal-lighter);
+            border-left: 4px solid var(--teal);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .pain-point-solution-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--teal-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .pain-point-solution p {
+            font-size: 15px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .pain-point-visual {
+            background: linear-gradient(135deg, var(--teal-lighter) 0%, var(--cream) 100%);
+            border-radius: 24px;
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .pain-point-illustration {
+            font-size: 80px;
+            text-align: center;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 40px;
+            background: var(--bg-alt);
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: default;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+            border-color: var(--teal);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .feature-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            color: var(--teal);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 120px 40px;
+            background: white;
+        }
+
+        .steps-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            position: relative;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--teal-light), var(--teal), var(--teal-light));
+            z-index: 0;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            margin: 0 auto 24px;
+            box-shadow: 0 8px 24px rgba(13, 148, 136, 0.3);
+        }
+
+        .step-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .step h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+
+        .step p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 120px 40px;
+            background: linear-gradient(180deg, var(--teal-lighter) 0%, white 100%);
+        }
+
+        .testimonials-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .testimonial-card:hover {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+        }
+
+        .testimonial-quote {
+            font-size: 16px;
+            color: var(--text);
+            line-height: 1.7;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .testimonial-quote::before {
+            content: '"';
+            font-size: 48px;
+            color: var(--teal);
+            font-family: Georgia, serif;
+            line-height: 0;
+            vertical-align: -16px;
+            margin-right: 4px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .testimonial-name {
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .testimonial-detail {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Pricing */
+        .pricing {
+            padding: 120px 40px;
+            background: white;
+        }
+
+        .pricing-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 32px;
+            border: 2px solid var(--border);
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--teal);
+            transform: scale(1.05);
+            box-shadow: 0 16px 48px rgba(13, 148, 136, 0.15);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--teal);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .pricing-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+
+        .pricing-price {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 4px;
+        }
+
+        .pricing-price span {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .pricing-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 32px;
+        }
+
+        .pricing-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pricing-features li:last-child { border-bottom: none; }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--teal);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .pricing-cta {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .pricing-cta-primary {
+            background: var(--teal);
+            color: white;
+        }
+
+        .pricing-cta-primary:hover {
+            background: var(--teal-dark);
+        }
+
+        .pricing-cta-secondary {
+            background: transparent;
+            color: var(--teal);
+            border: 2px solid var(--teal);
+        }
+
+        .pricing-cta-secondary:hover {
+            background: var(--teal-lighter);
+        }
+
+        /* FAQ */
+        .faq {
+            padding: 120px 40px;
+            background: var(--bg-alt);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 20px 24px;
+            background: none;
+            border: none;
+            text-align: left;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--navy);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .faq-question:hover { color: var(--teal); }
+
+        .faq-toggle {
+            font-size: 24px;
+            color: var(--teal);
+            transition: transform 0.3s;
+        }
+
+        .faq-answer {
+            padding: 0 24px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-answer.open {
+            padding: 0 24px 20px;
+            max-height: 300px;
+        }
+
+        .faq-answer p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Final CTA */
+        .final-cta {
+            padding: 120px 40px;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .final-cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .final-cta h2 {
+            font-size: 44px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .final-cta p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.7;
+            margin-bottom: 36px;
+        }
+
+        .btn-white {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 18px 40px;
+            background: white;
+            color: var(--teal-dark);
+            border: none;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 60px 40px 40px;
+            background: var(--navy);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-brand p {
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 300px;
+        }
+
+        .footer-column h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-links a {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover { color: white; }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-social a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .footer-social a:hover { background: var(--teal); }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-container { grid-template-columns: 1fr; text-align: center; }
+            .hero-subtitle { margin: 0 auto 36px; }
+            .hero-ctas { justify-content: center; }
+            .trust-badges { justify-content: center; }
+            .hero-visual { order: -1; }
+            .pain-point-row { grid-template-columns: 1fr; }
+            .pain-point-row.reverse { direction: ltr; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .testimonials-grid { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+            .pricing-card.featured { transform: none; }
+            .footer-content { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .nav { padding: 12px 20px; }
+            .nav-links { display: none; }
+            .hero { padding: 100px 20px 60px; }
+            .hero h1 { font-size: 36px; }
+            .hero-ctas { flex-direction: column; }
+            .pain-points, .features, .how-it-works, .testimonials, .pricing, .faq { padding: 80px 20px; }
+            .section-header h2 { font-size: 32px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .steps-container { grid-template-columns: 1fr; }
+            .steps-container::before { display: none; }
+            .final-cta { padding: 80px 20px; }
+            .final-cta h2 { font-size: 32px; }
+            .footer-content { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="#" class="nav-logo">
+            <span>🧭</span> CareCompass
+        </a>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+            <a href="#" class="nav-cta">Get Started Free</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    🤰 Now with Pregnancy Companion
+                </div>
+                <h1>Remember every pill. <em>Prove every symptom.</em> Be heard.</h1>
+                <p class="hero-subtitle">
+                    You're juggling medications, appointments, symptoms, and test results — and expected to explain it all in a 10-minute visit. Our platform is your external memory and your voice, built for patients, not just providers.
+                </p>
+                <div class="hero-ctas">
+                    <a href="#" class="btn-primary">Get Started Free — No Doctor Needed</a>
+                    <a href="#how-it-works" class="btn-secondary">See How It Works</a>
+                </div>
+                <div class="trust-badges">
+                    <div class="trust-badge"><span>🔒</span> HIPAA-compliant and encrypted</div>
+                    <div class="trust-badge"><span>💜</span> Built with patient communities</div>
+                    <div class="trust-badge"><span>📱</span> Your data lives on your device first</div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-illustration">
+                    <div class="floating-card floating-card-1">
+                        <div class="floating-card-icon">💊</div>
+                        <div class="floating-card-title">Metformin</div>
+                        <div class="floating-card-value">✓ Taken 8:15 AM</div>
+                    </div>
+                    <div class="floating-card floating-card-2">
+                        <div class="floating-card-icon">📊</div>
+                        <div class="floating-card-title">BP Trend</div>
+                        <div class="floating-card-value">128/82 — Stable</div>
+                    </div>
+                    <div class="floating-card floating-card-3">
+                        <div class="floating-card-icon">📋</div>
+                        <div class="floating-card-title">Visit Ready</div>
+                        <div class="floating-card-value">Report generated</div>
+                    </div>
+                    <div class="hero-phone">
+                        <div class="hero-phone-inner">
+                            <div class="hero-phone-notch"></div>
+                            <div style="text-align:center;margin-top:20px;">
+                                <div style="font-size:40px;margin-bottom:8px;">🧭</div>
+                                <div style="font-size:18px;font-weight:700;color:#1E293B;">Good morning, Sarah</div>
+                                <div style="font-size:13px;color:#64748B;">Monday, June 23, 2026</div>
+                            </div>
+                            <div style="background:#F0FDFA;border-radius:12px;padding:12px;margin-top:16px;text-align:center;">
+                                <div style="font-size:13px;color:#0F766E;font-weight:600;">🤰 Week 28 · Third Trimester</div>
+                            </div>
+                            <div style="display:flex;gap:8px;margin-top:12px;">
+                                <div style="flex:1;text-align:center;padding:10px;background:white;border-radius:10px;border:1px solid #E2E8F0;">
+                                    <div style="font-size:18px;font-weight:800;color:#0D9488;">92%</div>
+                                    <div style="font-size:10px;color:#64748B;">Meds</div>
+                                </div>
+                                <div style="flex:1;text-align:center;padding:10px;background:white;border-radius:10px;border:1px solid #E2E8F0;">
+                                    <div style="font-size:18px;font-weight:800;color:#0D9488;">84</div>
+                                    <div style="font-size:10px;color:#64748B;">Days</div>
+                                </div>
+                                <div style="flex:1;text-align:center;padding:10px;background:white;border-radius:10px;border:1px solid #E2E8F0;">
+                                    <div style="font-size:18px;font-weight:800;color:#0D9488;">7</div>
+                                    <div style="font-size:10px;color:#64748B;">Streak</div>
+                                </div>
+                            </div>
+                            <div style="background:#FEF3C7;border-radius:10px;padding:10px;margin-top:12px;font-size:11px;color:#92400E;">
+                                ⚠️ Headaches increased 43% — mention at Thursday's visit
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pain Points Section -->
+    <section class="pain-points" id="problems">
+        <div class="section-header">
+            <div class="section-label">💜 Real Patient Stories</div>
+            <h2>We built this because patients told us what's broken</h2>
+            <p>Every feature comes from a real frustration, a real quote, and a real need.</p>
+        </div>
+
+        <div class="pain-point-grid">
+            <!-- Pain Point 1 -->
+            <div class="pain-point-row">
+                <div class="pain-point-content">
+                    <div class="pain-point-number">1</div>
+                    <h3>"I forgot my medication — again. And now I'm scared to double-dose."</h3>
+                    <div class="pain-point-quote">
+                        <p>"The alarm goes off, I snooze it, and five hours later I can't remember if I ever took my blood pressure pill. Then I get scared to double-dose. So I just… don't take it that day."</p>
+                    </div>
+                    <div class="pain-point-solution">
+                        <div class="pain-point-solution-label">Our solution</div>
+                        <p>Smart, non-shaming reminders with a "did you take it?" quick-log. Missed-dose tracking that doesn't judge, plus refill alerts when you're running low. One-tap retroactive logging for those times when pregnancy brain or brain fog wins.</p>
+                    </div>
+                </div>
+                <div class="pain-point-visual">
+                    <div class="pain-point-illustration">💊⏰</div>
+                </div>
+            </div>
+
+            <!-- Pain Point 2 -->
+            <div class="pain-point-row reverse">
+                <div class="pain-point-content">
+                    <div class="pain-point-number">2</div>
+                    <h3>"I forget to tell my doctor the most important things."</h3>
+                    <div class="pain-point-quote">
+                        <p>"I had a list of symptoms in my notes app. Of course I forgot to open it during the appointment. After the doctor left, I just stared at the wall. Another three months of no answers."</p>
+                    </div>
+                    <div class="pain-point-solution">
+                        <div class="pain-point-solution-label">Our solution</div>
+                        <p>One-tap "Pre-visit Summary" that pulls your symptoms, medications, and questions into a single page. Print it, email it, or show it on your phone. Never leave the exam room kicking yourself again.</p>
+                    </div>
+                </div>
+                <div class="pain-point-visual">
+                    <div class="pain-point-illustration">📋✅</div>
+                </div>
+            </div>
+
+            <!-- Pain Point 3 -->
+            <div class="pain-point-row">
+                <div class="pain-point-content">
+                    <div class="pain-point-number">3</div>
+                    <h3>"I don't understand what my test results actually mean for me."</h3>
+                    <div class="pain-point-quote">
+                        <p>"I got an email: 'Your results are available.' I logged in, clicked the PDF, and it was full of medical codes. It said 'Mild abnormality, correlate clinically.' What does that mean? Am I dying? I panicked for a week."</p>
+                    </div>
+                    <div class="pain-point-solution">
+                        <div class="pain-point-solution-label">Our solution</div>
+                        <p>Plain-language translation layer. Every lab result, prescription instruction, and discharge note gets a clear "What This Means for You" summary — because understanding shouldn't require a medical degree.</p>
+                    </div>
+                </div>
+                <div class="pain-point-visual">
+                    <div class="pain-point-illustration">🔬💡</div>
+                </div>
+            </div>
+
+            <!-- Pain Point 4 -->
+            <div class="pain-point-row reverse">
+                <div class="pain-point-content">
+                    <div class="pain-point-number">4</div>
+                    <h3>"I need to prove my symptoms aren't just 'anxiety.'"</h3>
+                    <div class="pain-point-quote">
+                        <p>"I told my provider I had a headache that wouldn't go away. She wrote 'mild headache' in my chart. I ended up with severe preeclampsia. If I had shown her a printed log of my BP and symptoms, maybe she would have listened."</p>
+                    </div>
+                    <div class="pain-point-solution">
+                        <div class="pain-point-solution-label">Our solution</div>
+                        <p>The Pregnancy Companion automatically tracks blood pressure, swelling, headaches, and more — generating a trend report you can hand to your provider. Objective, date-stamped evidence that your voice matters.</p>
+                    </div>
+                </div>
+                <div class="pain-point-visual">
+                    <div class="pain-point-illustration">🤰📊</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <div class="section-label">✨ Core Features</div>
+            <h2>Everything you need to own your health story</h2>
+            <p>Built for real patients managing real conditions — not just fitness enthusiasts.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--teal-light);">📝</div>
+                <h3>Daily Health Journal</h3>
+                <p>Morning and evening check-ins with customizable symptom lists for your conditions.</p>
+                <ul class="feature-list">
+                    <li>One-tap logging for common symptoms</li>
+                    <li>Retroactive entry without fuss</li>
+                    <li>Automatic timeline and trend charts</li>
+                    <li>Voice entry for when typing hurts</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--gold-light);">💊</div>
+                <h3>Medication Management</h3>
+                <p>Reminders that are discreet and context-aware. No guilt, just support.</p>
+                <ul class="feature-list">
+                    <li>Side-effect logging linked to start dates</li>
+                    <li>Adherence score as "consistency"</li>
+                    <li>Refill alerts before you run out</li>
+                    <li>One-tap retroactive logging</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--coral-light);">📋</div>
+                <h3>Doctor Visit Timeline</h3>
+                <p>One universal feed for every doctor, every test, every note.</p>
+                <ul class="feature-list">
+                    <li>Upload paper documents via camera</li>
+                    <li>Search any medication or symptom</li>
+                    <li>Pre-visit summary generator</li>
+                    <li>Post-visit notes storage</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--sage-light);">📊</div>
+                <h3>Symptom Intelligence</h3>
+                <p>Automated pattern detection you can actually understand.</p>
+                <ul class="feature-list">
+                    <li>Severity, duration, and trigger tracking</li>
+                    <li>Plain-language trend alerts</li>
+                    <li>Correlation with medications</li>
+                    <li>Shareable reports for appointments</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--teal-light);">🤖</div>
+                <h3>AI Health Assistant</h3>
+                <p>Answers about YOUR data only. Never diagnoses.</p>
+                <ul class="feature-list">
+                    <li>Symptom summaries for visits</li>
+                    <li>Question generation for doctors</li>
+                    <li>Medication explanations</li>
+                    <li>Clear "not medical advice" boundary</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--gold-light);">🚨</div>
+                <h3>Emergency History Card</h3>
+                <p>One-tap access even when your phone is locked.</p>
+                <ul class="feature-list">
+                    <li>Paramedic-ready information</li>
+                    <li>Medications and high-risk flags</li>
+                    <li>Emergency contacts</li>
+                    <li>Partner/caregiver access option</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--coral-light);">🤰</div>
+                <h3>Pregnancy Companion</h3>
+                <p>Medical-grade tracking, not fruit-size comparisons.</p>
+                <ul class="feature-list">
+                    <li>BP trends with preeclampsia alerts</li>
+                    <li>Gestational diabetes logging</li>
+                    <li>Kick counter and fetal movement</li>
+                    <li>Postpartum transition support</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--sage-light);">👨‍👩‍👧</div>
+                <h3>Partner & Guardian Access</h3>
+                <p>Granular permissions. Share what you want, keep what you don't.</p>
+                <ul class="feature-list">
+                    <li>Medication and appointment sharing</li>
+                    <li>Critical alert notifications</li>
+                    <li>Emergency card access</li>
+                    <li>Privacy-first design</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--teal-light);">🔒</div>
+                <h3>Privacy & Security</h3>
+                <p>Your data is yours. Period.</p>
+                <ul class="feature-list">
+                    <li>HIPAA-compliant encryption</li>
+                    <li>Device-first storage</li>
+                    <li>No data selling, ever</li>
+                    <li>Full export and delete rights</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-header">
+            <div class="section-label">🚀 How It Works</div>
+            <h2>Three steps to owning your health story</h2>
+            <p>No complicated setup. No insurance needed. Just you and your data.</p>
+        </div>
+
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-icon">📝</div>
+                <h3>Log it once, remember forever</h3>
+                <p>Open the app, tap your symptoms or snap a photo of a new prescription. One-tap logging for when you're tired, in pain, or distracted.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-icon">🔗</div>
+                <h3>We connect the dots</h3>
+                <p>Timelines build automatically. Symptoms correlate with medications. Trend alerts appear in plain language. You don't have to remember — we do.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-icon">📋</div>
+                <h3>Walk in prepared, walk out heard</h3>
+                <p>One tap generates a summary. Print it, email it, or show it on your phone. Speak with confidence, backed by your own data.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="section-header">
+            <div class="section-label">💜 Patient Stories</div>
+            <h2>Real people, real impact</h2>
+            <p>These stories come from patients who finally feel heard.</p>
+        </div>
+
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p class="testimonial-quote">I have ADHD and three chronic conditions. This app remembers what my brain can't. For the first time, I came home from an appointment without crying because I forgot to mention something.</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar" style="background: var(--teal);">R</div>
+                    <div>
+                        <div class="testimonial-name">Rachel, 34</div>
+                        <div class="testimonial-detail">Chronic illness warrior</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <p class="testimonial-quote">As a Black woman, I was tired of being dismissed. I printed my symptom trends and handed them to my OB. She finally took my headaches seriously — and caught preeclampsia early. This app helped save my life.</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar" style="background: var(--coral);">K</div>
+                    <div>
+                        <div class="testimonial-name">Keisha, 29</div>
+                        <div class="testimonial-detail">Preeclampsia survivor</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <p class="testimonial-quote">My oncologist actually thanked me for bringing a printed medication and symptom log. He said it made his job easier and my care safer.</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar" style="background: var(--sage);">M</div>
+                    <div>
+                        <div class="testimonial-name">Miguel, 47</div>
+                        <div class="testimonial-detail">Cancer survivor</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <p class="testimonial-quote">I'm on insulin, blood pressure meds, and baby aspirin. The app tells me if my BP is trending up and reminds me to take everything at the right time. My husband can see my emergency card if something goes wrong. It's the peace of mind I needed.</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar" style="background: var(--gold);">P</div>
+                    <div>
+                        <div class="testimonial-name">Priya, 31</div>
+                        <div class="testimonial-detail">High-risk pregnancy</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="section-header">
+            <div class="section-label">💰 Simple Pricing</div>
+            <h2>No insurance needed. This is your personal health tool.</h2>
+            <p>Start free, upgrade when you need more.</p>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="pricing-name">Basic</div>
+                <div class="pricing-price">Free</div>
+                <div class="pricing-desc">Get started with the essentials</div>
+                <ul class="pricing-features">
+                    <li>Symptom journal & daily log</li>
+                    <li>Medication reminders (3 meds)</li>
+                    <li>Basic trend charts</li>
+                    <li>One device, local backup</li>
+                </ul>
+                <button class="pricing-cta pricing-cta-secondary">Get Started</button>
+            </div>
+
+            <div class="pricing-card featured">
+                <div class="pricing-badge">Most Popular</div>
+                <div class="pricing-name">Plus</div>
+                <div class="pricing-price">$3.99<span>/month</span></div>
+                <div class="pricing-desc">For patients managing real conditions</div>
+                <ul class="pricing-features">
+                    <li>Unlimited medications, refill alerts</li>
+                    <li>Symptom intelligence & trend alerts</li>
+                    <li>AI Health Assistant</li>
+                    <li>PDF/print reports</li>
+                    <li>Emergency history card</li>
+                    <li>Partner access (read-only)</li>
+                </ul>
+                <button class="pricing-cta pricing-cta-primary">Start Free Trial</button>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-name">Family</div>
+                <div class="pricing-price">$6.99<span>/month</span></div>
+                <div class="pricing-desc">For families and caregivers</div>
+                <ul class="pricing-features">
+                    <li>Everything in Plus</li>
+                    <li>Pregnancy Companion full module</li>
+                    <li>Caregiver mode</li>
+                    <li>Multi-device sync</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="pricing-cta pricing-cta-secondary">Start Free Trial</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <div class="section-header">
+            <div class="section-label">❓ Common Questions</div>
+            <h2>Everything you need to know</h2>
+        </div>
+
+        <div class="faq-container">
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Is this another patient portal?
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <p>No. Portals are hospital-owned and often confusing. This is <strong>your</strong> platform, designed for you to own your data and communicate better with any provider, anywhere.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Can my doctor see my data?
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Only if you choose to share. You control what's exported, printed, or emailed. We never send data to providers without your explicit action.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    How is this different from a period tracker or pregnancy app?
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Those apps track cycles or fetal size. We track your <strong>medical story</strong> — medications, test results, chronic symptoms, and communication with your care team. The Pregnancy Companion is a medical-grade log, not a fruit-size comparison.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Do you diagnose or give medical advice?
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Never. Our AI helps you summarize and organize what you've logged. It will never tell you what you have or what to do. Always consult your healthcare provider.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    What about privacy?
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Your data is encrypted and stored on your device first. We comply with HIPAA and never sell your data. You can delete everything at any time. No exceptions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="final-cta-content">
+            <h2>You already keep track of everything in your head. Let us carry some of it.</h2>
+            <p>Join thousands of patients who've stopped second-guessing and started communicating with clarity. Your first appointment-ready summary is three minutes away.</p>
+            <a href="#" class="btn-white">Create Your Free Account</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3><span>🧭</span> CareCompass</h3>
+                <p>Your health, in your hands. Not another patient portal — a memory system, communication bridge, and pattern-detection tool built for patients.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Product</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Pregnancy Companion</a></li>
+                    <li><a href="#">Security</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Community Stories</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Provider Guide</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                    <li><a href="#">HIPAA Notice</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 CareCompass. All rights reserved.</span>
+            <div class="footer-social">
+                <a href="#">𝕏</a>
+                <a href="#">in</a>
+                <a href="#">ig</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleFaq(button) {
+            const answer = button.nextElementSibling;
+            const toggle = button.querySelector('.faq-toggle');
+            
+            // Close all other answers
+            document.querySelectorAll('.faq-answer').forEach(a => {
+                if (a !== answer) {
+                    a.classList.remove('open');
+                    a.previousElementSibling.querySelector('.faq-toggle').textContent = '+';
+                }
+            });
+            
+            // Toggle current
+            answer.classList.toggle('open');
+            toggle.textContent = answer.classList.contains('open') ? '−' : '+';
+        }
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Navbar background on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 50) {
+                nav.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)';
+            } else {
+                nav.style.boxShadow = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>
