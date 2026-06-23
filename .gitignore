@@ -17,6 +17,7 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.example
 
 # IDE
 .idea/
@@ -68,3 +69,24 @@ docker-compose.override.yml
 *.tfstate
 *.tfstate.backup
 .terraform/
+
+# SECURITY - Never commit these
+apps/api/src/security/
+docs/security/
+docs/images/
+infrastructure/
+
+# Auth implementation (keep private)
+apps/api/src/auth/
+
+# Internal documentation
+*.md
+!README.md
+!LICENSE
+!CONTRIBUTING.md
+
+# Private configs
+*.pem
+*.key
+*.cert
+*.crt
