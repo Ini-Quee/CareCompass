@@ -20,6 +20,13 @@ import { VitalsScreen } from '../screens/vitals/VitalsScreen';
 import { ReportsScreen } from '../screens/reports/ReportsScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
 
+// New Screens
+import { AIAssistantScreen } from '../screens/ai/AIAssistantScreen';
+import { KickCounterScreen } from '../screens/vitals/KickCounterScreen';
+import { BloodSugarScreen } from '../screens/vitals/BloodSugarScreen';
+import { CaregiverPortalScreen } from '../screens/caregivers/CaregiverPortalScreen';
+import { AppointmentsScreen } from '../screens/appointments/AppointmentsScreen';
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -49,20 +56,20 @@ function MainTabs() {
           let iconName: keyof typeof Ionicons.glyphMap;
 
           switch (route.name) {
-            case 'Dashboard':
+            case 'Home':
               iconName = focused ? 'home' : 'home-outline';
               break;
             case 'Journal':
               iconName = focused ? 'journal' : 'journal-outline';
               break;
-            case 'Medications':
+            case 'Meds':
               iconName = focused ? 'medkit' : 'medkit-outline';
               break;
             case 'Vitals':
               iconName = focused ? 'heart' : 'heart-outline';
               break;
-            case 'Reports':
-              iconName = focused ? 'document-text' : 'document-text-outline';
+            case 'AI':
+              iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
               break;
             default:
               iconName = 'ellipse';
@@ -75,11 +82,11 @@ function MainTabs() {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Dashboard" component={DashboardScreen} />
+      <Tab.Screen name="Home" component={DashboardScreen} />
       <Tab.Screen name="Journal" component={JournalScreen} />
-      <Tab.Screen name="Medications" component={MedicationsScreen} />
+      <Tab.Screen name="Meds" component={MedicationsScreen} />
       <Tab.Screen name="Vitals" component={VitalsScreen} />
-      <Tab.Screen name="Reports" component={ReportsScreen} />
+      <Tab.Screen name="AI" component={AIAssistantScreen} />
     </Tab.Navigator>
   );
 }
@@ -97,6 +104,31 @@ function MainNavigator() {
         component={SettingsScreen}
         options={{ title: 'Settings' }}
       />
+      <Stack.Screen 
+        name="Reports" 
+        component={ReportsScreen}
+        options={{ title: 'Provider Reports' }}
+      />
+      <Stack.Screen 
+        name="Appointments" 
+        component={AppointmentsScreen}
+        options={{ title: 'Appointments' }}
+      />
+      <Stack.Screen 
+        name="KickCounter" 
+        component={KickCounterScreen}
+        options={{ title: 'Kick Counter' }}
+      />
+      <Stack.Screen 
+        name="BloodSugar" 
+        component={BloodSugarScreen}
+        options={{ title: 'Blood Sugar' }}
+      />
+      <Stack.Screen 
+        name="Caregivers" 
+        component={CaregiverPortalScreen}
+        options={{ title: 'Caregivers' }}
+      />
     </Stack.Navigator>
   );
 }
@@ -105,7 +137,6 @@ export function AppNavigator() {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
-    // TODO: Add loading screen
     return null;
   }
 
