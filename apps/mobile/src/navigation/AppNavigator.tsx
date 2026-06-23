@@ -20,12 +20,17 @@ import { VitalsScreen } from '../screens/vitals/VitalsScreen';
 import { ReportsScreen } from '../screens/reports/ReportsScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
 
-// New Screens
+// Feature Screens
 import { AIAssistantScreen } from '../screens/ai/AIAssistantScreen';
 import { KickCounterScreen } from '../screens/vitals/KickCounterScreen';
 import { BloodSugarScreen } from '../screens/vitals/BloodSugarScreen';
+import { WeightTrackingScreen } from '../screens/vitals/WeightTrackingScreen';
 import { CaregiverPortalScreen } from '../screens/caregivers/CaregiverPortalScreen';
 import { AppointmentsScreen } from '../screens/appointments/AppointmentsScreen';
+import { DiscreteModeScreen } from '../screens/settings/DiscreteModeScreen';
+import { EmergencyScreen } from '../screens/emergency/EmergencyScreen';
+import { PregnancyTimelineScreen } from '../screens/pregnancy/PregnancyTimelineScreen';
+import { ConcernsScreen } from '../screens/concerns/ConcernsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -125,9 +130,34 @@ function MainNavigator() {
         options={{ title: 'Blood Sugar' }}
       />
       <Stack.Screen 
+        name="WeightTracking" 
+        component={WeightTrackingScreen}
+        options={{ title: 'Weight' }}
+      />
+      <Stack.Screen 
         name="Caregivers" 
         component={CaregiverPortalScreen}
         options={{ title: 'Caregivers' }}
+      />
+      <Stack.Screen 
+        name="DiscreteMode" 
+        component={DiscreteModeScreen}
+        options={{ title: 'Discrete Mode' }}
+      />
+      <Stack.Screen 
+        name="Emergency" 
+        component={EmergencyScreen}
+        options={{ title: 'Emergency Info' }}
+      />
+      <Stack.Screen 
+        name="Timeline" 
+        component={PregnancyTimelineScreen}
+        options={{ title: 'Pregnancy Timeline' }}
+      />
+      <Stack.Screen 
+        name="Concerns" 
+        component={ConcernsScreen}
+        options={{ title: 'My Concerns' }}
       />
     </Stack.Navigator>
   );
