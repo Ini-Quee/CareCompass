@@ -73,7 +73,6 @@ docker-compose.override.yml
 # SECURITY - Never commit these
 apps/api/src/security/
 docs/security/
-docs/images/
 infrastructure/
 
 # Auth implementation (keep private)
