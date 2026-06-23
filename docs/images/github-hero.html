@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareCompass — GitHub Visual Documentation</title>
+    <style>
+        :root {
+            --bg: #0F172A;
+            --surface: #1E293B;
+            --card: #334155;
+            --primary: #DB2777;
+            --primary-light: #FCE7F3;
+            --accent: #F59E0B;
+            --success: #10B981;
+            --text: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --border: #475569;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 40px;
+            background: linear-gradient(135deg, #1E293B 0%, #0F172A 50%, #1E1B4B 100%);
+            border-radius: 32px;
+            margin-bottom: 40px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(219, 39, 119, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: rgba(219, 39, 119, 0.2);
+            border: 1px solid rgba(219, 39, 119, 0.3);
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #DB2777 50%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Feature Grid */
+        .features-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title span {
+            font-size: 32px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(219, 39, 119, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Architecture Section */
+        .architecture-section {
+            margin-bottom: 40px;
+        }
+
+        .arch-card {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid var(--border);
+        }
+
+        .arch-layers {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .arch-layer {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: var(--card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .arch-layer-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .arch-layer-info {
+            flex: 1;
+        }
+
+        .arch-layer-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .arch-layer-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .arch-layer-tech {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tech-badge {
+            padding: 4px 12px;
+            background: rgba(219, 39, 119, 0.2);
+            border: 1px solid rgba(219, 39, 119, 0.3);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Phone Mockups */
+        .mockups-section {
+            margin-bottom: 40px;
+        }
+
+        .phone-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .phone-frame {
+            background: #000000;
+            border-radius: 36px;
+            padding: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .phone-screen {
+            background: #FDF2F8;
+            border-radius: 28px;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .phone-notch {
+            width: 100px;
+            height: 24px;
+            background: #000000;
+            border-radius: 0 0 16px 16px;
+            margin: 0 auto;
+        }
+
+        .phone-content {
+            padding: 16px;
+        }
+
+        .phone-label {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Security Section */
+        .security-section {
+            margin-bottom: 40px;
+        }
+
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .security-card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid var(--border);
+        }
+
+        .security-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .security-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .security-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        .footer-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .footer-link {
+            font-size: 14px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HERO -->
+        <div class="hero">
+            <div class="hero-content">
+                <div class="hero-badge">🤰 Pregnancy Companion Module</div>
+                <h1 class="hero-title">CareCompass</h1>
+                <p class="hero-subtitle">
+                    A patient-centered healthcare management platform. Not another portal. A memory system, communication bridge, and pattern-detection tool.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-value">15+</div>
+                        <div class="stat-label">Mobile Screens</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">60+</div>
+                        <div class="stat-label">API Endpoints</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">25+</div>
+                        <div class="stat-label">Database Tables</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">HIPAA Ready</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FEATURES -->
+        <div class="features-section">
+            <h2 class="section-title"><span>✨</span> Core Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <div class="feature-title">One-Tap Symptom Logging</div>
+                    <div class="feature-desc">Log nausea, headaches, fatigue, swelling, and mood in seconds. Designed for ADHD, brain fog, and exhaustion.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💊</div>
+                    <div class="feature-title">Smart Medication Tracking</div>
+                    <div class="feature-desc">Prenatal vitamins, iron, BP meds, insulin. Side-effect logging tied to medication start dates.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Symptom Intelligence</div>
+                    <div class="feature-desc">Automatic trend detection. "Headaches increased 43% in 14 days." Correlation with BP and medications.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <div class="feature-title">Evidence Builder Reports</div>
+                    <div class="feature-desc">Clinical-language reports for appointments. Combats provider dismissal with date-stamped data.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <div class="feature-title">AI Health Assistant</div>
+                    <div class="feature-desc">Summarizes symptoms, generates questions, explains data. Never diagnoses. Always explains.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍👩‍👧</div>
+                    <div class="feature-title">Partner Portal</div>
+                    <div class="feature-desc">Customizable sharing with partners. Alert thresholds for BP, missed meds. Patient controls everything.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ARCHITECTURE -->
+        <div class="architecture-section">
+            <h2 class="section-title"><span>🏗️</span> Technical Architecture</h2>
+            <div class="arch-card">
+                <div class="arch-layers">
+                    <div class="arch-layer">
+                        <div class="arch-layer-icon" style="background: rgba(139, 92, 246, 0.2);">📱</div>
+                        <div class="arch-layer-info">
+                            <div class="arch-layer-title">Client Layer</div>
+                            <div class="arch-layer-desc">Cross-platform mobile application with offline capability</div>
+                        </div>
+                        <div class="arch-layer-tech">
+                            <span class="tech-badge">React Native</span>
+                            <span class="tech-badge">Expo</span>
+                            <span class="tech-badge">TypeScript</span>
+                        </div>
+                    </div>
+                    <div class="arch-layer">
+                        <div class="arch-layer-icon" style="background: rgba(219, 39, 119, 0.2);">⚡</div>
+                        <div class="arch-layer-info">
+                            <div class="arch-layer-title">API Gateway</div>
+                            <div class="arch-layer-desc">Rate limiting, request validation, JWT verification, CORS handling</div>
+                        </div>
+                        <div class="arch-layer-tech">
+                            <span class="tech-badge">Express</span>
+                            <span class="tech-badge">Helmet</span>
+                            <span class="tech-badge">CORS</span>
+                        </div>
+                    </div>
+                    <div class="arch-layer">
+                        <div class="arch-layer-icon" style="background: rgba(245, 158, 11, 0.2);">🔧</div>
+                        <div class="arch-layer-info">
+                            <div class="arch-layer-title">Application Layer</div>
+                            <div class="arch-layer-desc">Modular services for auth, pregnancy, vitals, reports, and AI</div>
+                        </div>
+                        <div class="arch-layer-tech">
+                            <span class="tech-badge">NestJS</span>
+                            <span class="tech-badge">Passport</span>
+                            <span class="tech-badge">Bull</span>
+                        </div>
+                    </div>
+                    <div class="arch-layer">
+                        <div class="arch-layer-icon" style="background: rgba(16, 185, 129, 0.2);">💾</div>
+                        <div class="arch-layer-info">
+                            <div class="arch-layer-title">Data Layer</div>
+                            <div class="arch-layer-desc">Encrypted storage with audit logging and backup</div>
+                        </div>
+                        <div class="arch-layer-tech">
+                            <span class="tech-badge">PostgreSQL</span>
+                            <span class="tech-badge">Redis</span>
+                            <span class="tech-badge">S3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECURITY -->
+        <div class="security-section">
+            <h2 class="section-title"><span>🔒</span> Security Architecture</h2>
+            <div class="security-grid">
+                <div class="security-card">
+                    <div class="security-icon" style="background: rgba(239, 68, 68, 0.2);">🛡️</div>
+                    <div class="security-title">JWT Authentication</div>
+                    <div class="security-desc">15-minute access tokens with single-use refresh rotation. Token family tracking prevents replay attacks.</div>
+                </div>
+                <div class="security-card">
+                    <div class="security-icon" style="background: rgba(16, 185, 129, 0.2);">🔐</div>
+                    <div class="security-title">Encryption Everywhere</div>
+                    <div class="security-desc">AES-256 at rest, TLS 1.3 in transit. Client-side encryption for sensitive health data.</div>
+                </div>
+                <div class="security-card">
+                    <div class="security-icon" style="background: rgba(245, 158, 11, 0.2);">📝</div>
+                    <div class="security-title">Audit Logging</div>
+                    <div class="security-desc">Every data access logged: who, what, when, where. 7-year retention. Anomaly detection.</div>
+                </div>
+                <div class="security-card">
+                    <div class="security-icon" style="background: rgba(139, 92, 246, 0.2);">🚫</div>
+                    <div class="security-title">Row Level Security</div>
+                    <div class="security-desc">Users can only access their own data. Caregiver access requires explicit patient consent.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p class="footer-text">Built with ❤️ for patients everywhere</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">GitHub</a>
+                <a href="#" class="footer-link">Documentation</a>
+                <a href="#" class="footer-link">Security</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

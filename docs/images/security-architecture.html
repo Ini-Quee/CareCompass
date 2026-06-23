@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareCompass — Security Architecture</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 100%);
+            padding: 60px 40px;
+            min-height: 100vh;
+            color: #F8FAFC;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFFFFF 0%, #EF4444 50%, #F59E0B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .header p {
+            font-size: 18px;
+            color: #94A3B8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Threat Model */
+        .threat-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title span { font-size: 32px; }
+
+        .threat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .threat-card {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid #334155;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .threat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .threat-card.critical::before { background: #EF4444; }
+        .threat-card.high::before { background: #F97316; }
+        .threat-card.medium::before { background: #F59E0B; }
+        .threat-card.low::before { background: #10B981; }
+
+        .threat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .threat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .threat-severity {
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .severity-critical { background: rgba(239, 68, 68, 0.2); color: #EF4444; }
+        .severity-high { background: rgba(249, 115, 22, 0.2); color: #F97316; }
+        .severity-medium { background: rgba(245, 158, 11, 0.2); color: #F59E0B; }
+        .severity-low { background: rgba(16, 185, 129, 0.2); color: #10B981; }
+
+        .threat-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .threat-desc {
+            font-size: 14px;
+            color: #94A3B8;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .threat-mitigation {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .mitigation-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #10B981;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .mitigation-text {
+            font-size: 13px;
+            color: #D1FAE5;
+        }
+
+        /* Security Controls */
+        .controls-section {
+            margin-bottom: 60px;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .control-card {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid #334155;
+            text-align: center;
+        }
+
+        .control-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 16px;
+        }
+
+        .control-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .control-desc {
+            font-size: 13px;
+            color: #94A3B8;
+            line-height: 1.6;
+        }
+
+        /* OWASP Top 10 */
+        .owasp-section {
+            margin-bottom: 60px;
+        }
+
+        .owasp-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .owasp-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 16px;
+            border: 1px solid #334155;
+        }
+
+        .owasp-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(239, 68, 68, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 800;
+            color: #EF4444;
+            flex-shrink: 0;
+        }
+
+        .owasp-info {
+            flex: 1;
+        }
+
+        .owasp-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .owasp-desc {
+            font-size: 12px;
+            color: #94A3B8;
+            line-height: 1.5;
+        }
+
+        .owasp-status {
+            display: inline-flex;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .status-mitigated {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10B981;
+        }
+
+        .status-addressed {
+            background: rgba(245, 158, 11, 0.2);
+            color: #F59E0B;
+        }
+
+        /* HIPAA Compliance */
+        .hipaa-section {
+            margin-bottom: 60px;
+        }
+
+        .hipaa-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .hipaa-card {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid #334155;
+        }
+
+        .hipaa-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .hipaa-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .hipaa-desc {
+            font-size: 13px;
+            color: #94A3B8;
+            line-height: 1.6;
+        }
+
+        .hipaa-checklist {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .hipaa-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #D1FAE5;
+        }
+
+        .check-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            background: #10B981;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔒 Security Architecture</h1>
+            <p>HIPAA-compliant, defense-in-depth security designed to protect sensitive health data from all attack vectors</p>
+        </div>
+
+        <!-- THREAT MODEL -->
+        <div class="threat-section">
+            <h2 class="section-title"><span>⚠️</span> Threat Model</h2>
+            <div class="threat-grid">
+                <div class="threat-card critical">
+                    <div class="threat-header">
+                        <div class="threat-icon" style="background: rgba(239, 68, 68, 0.2);">🔓</div>
+                        <span class="threat-severity severity-critical">Critical</span>
+                    </div>
+                    <div class="threat-title">Unauthorized Data Access</div>
+                    <div class="threat-desc">Attacker gains access to patient health records including pregnancy data, medications, and medical history.</div>
+                    <div class="threat-mitigation">
+                        <div class="mitigation-label">Mitigation</div>
+                        <div class="mitigation-text">JWT auth + Row Level Security + AES-256 encryption at rest</div>
+                    </div>
+                </div>
+
+                <div class="threat-card critical">
+                    <div class="threat-header">
+                        <div class="threat-icon" style="background: rgba(239, 68, 68, 0.2);">💉</div>
+                        <span class="threat-severity severity-critical">Critical</span>
+                    </div>
+                    <div class="threat-title">SQL Injection</div>
+                    <div class="threat-desc">Attacker injects malicious SQL through input fields to extract or modify database contents.</div>
+                    <div class="threat-mitigation">
+                        <div class="mitigation-label">Mitigation</div>
+                        <div class="mitigation-text">Prisma ORM with parameterized queries + input validation</div>
+                    </div>
+                </div>
+
+                <div class="threat-card high">
+                    <div class="threat-header">
+                        <div class="threat-icon" style="background: rgba(249, 115, 22, 0.2);">🔑</div>
+                        <span class="threat-severity severity-high">High</span>
+                    </div>
+                    <div class="threat-title">Token Theft / Replay</div>
+                    <div class="threat-desc">Attacker steals JWT tokens and replays them to gain unauthorized access.</div>
+                    <div class="threat-mitigation">
+                        <div class="mitigation-label">Mitigation</div>
+                        <div class="mitigation-text">15-min expiry + single-use refresh tokens + token family tracking</div>
+                    </div>
+                </div>
+
+                <div class="threat-card high">
+                    <div class="threat-header">
+                        <div class="threat-icon" style="background: rgba(249, 115, 22, 0.2);">🌐</div>
+                        <span class="threat-severity severity-high">High</span>
+                    </div>
+                    <div class="threat-title">Cross-Site Scripting (XSS)</div>
+                    <div class="threat-desc">Attacker injects malicious scripts that execute in other users' browsers.</div>
+                    <div class="threat-mitigation">
+                        <div class="mitigation-label">Mitigation</div>
+                        <div class="mitigation-text">Content Security Policy + output encoding + Helmet.js</div>
+                    </div>
+                </div>
+
+                <div class="threat-card medium">
+                    <div class="threat-header">
+                        <div class="threat-icon" style="background: rgba(245, 158, 11, 0.2);">🚫</div>
+                        <span class="threat-severity severity-medium">Medium</span>
+                    </div>
+                    <div class="threat-title">Broken Access Control</div>
+                    <div class="threat-desc">User accesses another user's pregnancy data or caregiver sees unauthorized information.</div>
+                    <div class="threat-mitigation">
+                        <div class="mitigation-label">Mitigation</div>
+                        <div class="mitigation-text">Row Level Security + ownership verification on every request</div>
+                    </div>
+                </div>
+
+                <div class="threat-card medium">
+                    <div class="threat-header">
+                        <div class="threat-icon" style="background: rgba(245, 158, 11, 0.2);">⚡</div>
+                        <span class="threat-severity severity-medium">Medium</span>
+                    </div>
+                    <div class="threat-title">Brute Force / DDoS</div>
+                    <div class="threat-desc">Attacker floods the API with requests or attempts to guess passwords.</div>
+                    <div class="threat-mitigation">
+                        <div class="mitigation-label">Mitigation</div>
+                        <div class="mitigation-text">Rate limiting + account lockout + CAPTCHA after failures</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECURITY CONTROLS -->
+        <div class="controls-section">
+            <h2 class="section-title"><span>🛡️</span> Security Controls</h2>
+            <div class="controls-grid">
+                <div class="control-card">
+                    <div class="control-icon" style="background: rgba(239, 68, 68, 0.2);">🔐</div>
+                    <div class="control-title">Authentication</div>
+                    <div class="control-desc">JWT with 15-min expiry, single-use refresh tokens, MFA support, biometric login on mobile</div>
+                </div>
+                <div class="control-card">
+                    <div class="control-icon" style="background: rgba(16, 185, 129, 0.2);">🔒</div>
+                    <div class="control-title">Encryption</div>
+                    <div class="control-desc">AES-256 at rest, TLS 1.3 in transit, client-side encryption for sensitive data, key rotation</div>
+                </div>
+                <div class="control-card">
+                    <div class="control-icon" style="background: rgba(245, 158, 11, 0.2);">📝</div>
+                    <div class="control-title">Audit Logging</div>
+                    <div class="control-desc">Every data access logged with user, action, timestamp, IP. 7-year retention. Anomaly detection.</div>
+                </div>
+                <div class="control-card">
+                    <div class="control-icon" style="background: rgba(139, 92, 246, 0.2);">🚫</div>
+                    <div class="control-title">Input Validation</div>
+                    <div class="control-desc">Class-validator on all DTOs, whitelist strict mode, type checking, length limits</div>
+                </div>
+                <div class="control-card">
+                    <div class="control-icon" style="background: rgba(59, 130, 246, 0.2);">👥</div>
+                    <div class="control-title">Row Level Security</div>
+                    <div class="control-desc">Users can only access their own data. Caregiver access requires explicit patient consent.</div>
+                </div>
+                <div class="control-card">
+                    <div class="control-icon" style="background: rgba(236, 72, 153, 0.2);">⏱️</div>
+                    <div class="control-title">Rate Limiting</div>
+                    <div class="control-desc">Per-user rate limits, sliding window, exponential backoff on failures, IP-based throttling</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OWASP TOP 10 -->
+        <div class="owasp-section">
+            <h2 class="section-title"><span>📋</span> OWASP Top 10 Coverage</h2>
+            <div class="owasp-grid">
+                <div class="owasp-item">
+                    <div class="owasp-number">01</div>
+                    <div class="owasp-info">
+                        <div class="owasp-title">Broken Access Control</div>
+                        <div class="owasp-desc">Row Level Security + ownership verification on every endpoint</div>
+                        <span class="owasp-status status-mitigated">✓ Mitigated</span>
+                    </div>
+                </div>
+                <div class="owasp-item">
+                    <div class="owasp-number">02</div>
+                    <div class="owasp-info">
+                        <div class="owasp-title">Cryptographic Failures</div>
+                        <div class="owasp-desc">AES-256 encryption, TLS 1.3, secure key management</div>
+                        <span class="owasp-status status-mitigated">✓ Mitigated</span>
+                    </div>
+                </div>
+                <div class="owasp-item">
+                    <div class="owasp-number">03</div>
+                    <div class="owasp-info">
+                        <div class="owasp-title">Injection</div>
+                        <div class="owasp-desc">Prisma ORM parameterized queries + input validation</div>
+                        <span class="owasp-status status-mitigated">✓ Mitigated</span>
+                    </div>
+                </div>
+                <div class="owasp-item">
+                    <div class="owasp-number">04</div>
+                    <div class="owasp-info">
+                        <div class="owasp-title">Insecure Design</div>
+                        <div class="owasp-desc">Security-first architecture, threat modeling, defense in depth</div>
+                        <span class="owasp-status status-mitigated">✓ Mitigated</span>
+                    </div>
+                </div>
+                <div class="owasp-item">
+                    <div class="owasp-number">05</div>
+                    <div class="owasp-info">
+                        <div class="owasp-title">Security Misconfiguration</div>
+                        <div class="owasp-desc">Helmet.js headers, CORS restrict, no debug in prod</div>
+                        <span class="owasp-status status-mitigated">✓ Mitigated</span>
+                    </div>
+                </div>
+                <div class="owasp-item">
+                    <div class="owasp-number">06</div>
+                    <div class="owasp-info">
+                        <div class="owasp-title">Vulnerable Components</div>
+                        <div class="owasp-desc">npm audit, Dependabot, lockfile, regular updates</div>
+                        <span class="owasp-status status-addressed">⚠ Addressed</span>
+                    </div>
+                </div>
+                <div class="owasp-item">
+                    <div class="owasp-number">07</div>
+                    <div class="owasp-info">
+                        <div class="owasp-title">Auth Failures</div>
+                        <div class="owasp-desc">bcrypt password hashing, MFA, account lockout, session mgmt</div>
+                        <span class="owasp-status status-mitigated">✓ Mitigated</span>
+                    </div>
+                </div>
+                <div class="owasp-item">
+                    <div class="owasp-number">08</div>
+                    <div class="owasp-info">
+                        <div class="owasp-title">Data Integrity Failures</div>
+                        <div class="owasp-desc">Audit logging, checksums, version control, signed releases</div>
+                        <span class="owasp-status status-mitigated">✓ Mitigated</span>
+                    </div>
+                </div>
+                <div class="owasp-item">
+                    <div class="owasp-number">09</div>
+                    <div class="owasp-info">
+                        <div class="owasp-title">Logging Failures</div>
+                        <div class="owasp-desc">Comprehensive audit log, alerting, 7-year retention</div>
+                        <span class="owasp-status status-mitigated">✓ Mitigated</span>
+                    </div>
+                </div>
+                <div class="owasp-item">
+                    <div class="owasp-number">10</div>
+                    <div class="owasp-info">
+                        <div class="owasp-title">SSRF</div>
+                        <div class="owasp-desc">No user-controlled URLs, whitelist external services</div>
+                        <span class="owasp-status status-mitigated">✓ Mitigated</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HIPAA COMPLIANCE -->
+        <div class="hipaa-section">
+            <h2 class="section-title"><span>🏥</span> HIPAA Compliance</h2>
+            <div class="hipaa-grid">
+                <div class="hipaa-card">
+                    <div class="hipaa-icon">🔐</div>
+                    <div class="hipaa-title">Confidentiality</div>
+                    <div class="hipaa-desc">Protect patient data from unauthorized access</div>
+                    <div class="hipaa-checklist">
+                        <div class="hipaa-check"><span class="check-icon">✓</span> AES-256 encryption at rest</div>
+                        <div class="hipaa-check"><span class="check-icon">✓</span> TLS 1.3 in transit</div>
+                        <div class="hipaa-check"><span class="check-icon">✓</span> Row Level Security</div>
+                        <div class="hipaa-check"><span class="check-icon">✓</span> Role-based access control</div>
+                    </div>
+                </div>
+                <div class="hipaa-card">
+                    <div class="hipaa-icon">🛡️</div>
+                    <div class="hipaa-title">Integrity</div>
+                    <div class="hipaa-desc">Ensure data is not tampered with</div>
+                    <div class="hipaa-checklist">
+                        <div class="hipaa-check"><span class="check-icon">✓</span> Audit logging</div>
+                        <div class="hipaa-check"><span class="check-icon">✓</span> Input validation</div>
+                        <div class="hipaa-check"><span class="check-icon">✓</span> Parameterized queries</div>
+                        <div class="hipaa-check"><span class="check-icon">✓</span> Version control</div>
+                    </div>
+                </div>
+                <div class="hipaa-card">
+                    <div class="hipaa-icon">⏰</div>
+                    <div class="hipaa-title">Availability</div>
+                    <div class="hipaa-desc">Ensure data is accessible when needed</div>
+                    <div class="hipaa-checklist">
+                        <div class="hipaa-check"><span class="check-icon">✓</span> Rate limiting</div>
+                        <div class="hipaa-check"><span class="check-icon">✓</span> DDoS protection</div>
+                        <div class="hipaa-check"><span class="check-icon">✓</span> Auto-scaling</div>
+                        <div class="hipaa-check"><span class="check-icon">✓</span> Backup & recovery</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

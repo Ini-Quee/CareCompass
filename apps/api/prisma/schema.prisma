@@ -1,0 +1,583 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// AUTHENTICATION & USERS
+// ============================================
+
+model User {
+  id                    String    @id @default(uuid())
+  email                 String    @unique
+  passwordHash          String    @map("password_hash")
+  firstName             String    @map("first_name")
+  lastName              String?   @map("last_name")
+  dateOfBirth           DateTime? @map("date_of_birth")
+  phone                 String?
+  emergencyContactName  String?   @map("emergency_contact_name")
+  emergencyContactPhone String?   @map("emergency_contact_phone")
+  bloodType             String?   @map("blood_type")
+  preferredPharmacy     String?   @map("preferred_pharmacy")
+  insuranceProvider     String?   @map("insurance_provider")
+  insuranceId           String?   @map("insurance_id")
+  mfaEnabled            Boolean   @default(false) @map("mfa_enabled")
+  mfaSecret             String?   @map("mfa_secret")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  refreshTokens         RefreshToken[]
+  auditLogs             AuditLog[]
+  conditions            UserCondition[]
+  medications           Medication[]
+  medicationLogs        MedicationLog[]
+  appointments          Appointment[]
+  labResults            LabResult[]
+  symptomEntries        SymptomEntry[]
+  documents             Document[]
+  notifications         Notification[]
+  preferences           UserPreference?
+  
+  // Pregnancy relations
+  pregnancyProfiles     PregnancyProfile[]
+  caregiverFor          PregnancyCaregiverAccess[] @relation("CaregiverUser")
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  tokenHash String   @map("token_hash")
+  expiresAt DateTime @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+  @@map("refresh_tokens")
+}
+
+model AuditLog {
+  id           String   @id @default(uuid())
+  userId       String?  @map("user_id")
+  action       String
+  resourceType String   @map("resource_type")
+  resourceId   String?  @map("resource_id")
+  ipAddress    String?  @map("ip_address")
+  userAgent    String?  @map("user_agent")
+  metadata     Json?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@map("audit_log")
+}
+
+// ============================================
+// HEALTH RECORDS
+// ============================================
+
+model UserCondition {
+  id              String    @id @default(uuid())
+  userId          String    @map("user_id")
+  conditionName   String    @map("condition_name")
+  conditionType   String?   @map("condition_type")
+  diagnosedDate   DateTime? @map("diagnosed_date")
+  managingProvider String?  @map("managing_provider")
+  isActive        Boolean   @default(true) @map("is_active")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isActive])
+  @@map("user_conditions")
+}
+
+model Medication {
+  id            String    @id @default(uuid())
+  userId        String    @map("user_id")
+  name          String
+  dosage        String?
+  dosageUnit    String?   @map("dosage_unit")
+  frequency     String?
+  times         String[]  // Array of time strings
+  purpose       String?
+  startDate     DateTime? @map("start_date")
+  endDate       DateTime? @map("end_date")
+  isActive      Boolean   @default(true) @map("is_active")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logs  MedicationLog[]
+
+  @@index([userId, isActive])
+  @@map("medications")
+}
+
+model MedicationLog {
+  id             String    @id @default(uuid())
+  medicationId   String    @map("medication_id")
+  userId         String    @map("user_id")
+  scheduledTime  DateTime? @map("scheduled_time")
+  actualTime     DateTime? @map("actual_time")
+  status         String    // taken, skipped, snoozed, missed
+  notes          String?
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  medication Medication @relation(fields: [medicationId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, scheduledTime])
+  @@index([medicationId])
+  @@map("medication_logs")
+}
+
+model Appointment {
+  id                String    @id @default(uuid())
+  userId            String    @map("user_id")
+  doctorName        String    @map("doctor_name")
+  specialty         String?
+  locationName      String?   @map("location_name")
+  locationAddress   String?   @map("location_address")
+  appointmentDate   DateTime  @map("appointment_date")
+  appointmentTime   String?   @map("appointment_time")
+  durationMinutes   Int?      @map("duration_minutes")
+  purpose           String?
+  preVisitNotes     String?   @map("pre_visit_notes")
+  postVisitNotes    String?   @map("post_visit_notes")
+  status            String    @default("scheduled") // scheduled, completed, cancelled, no_show
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, appointmentDate])
+  @@map("appointments")
+}
+
+model LabResult {
+  id                      String    @id @default(uuid())
+  userId                  String    @map("user_id")
+  testName                String    @map("test_name")
+  testDate                DateTime  @map("test_date")
+  resultValue             String?   @map("result_value")
+  resultUnit              String?   @map("result_unit")
+  referenceRange          String?   @map("reference_range")
+  status                  String?   // normal, above_range, below_range, critical
+  plainLanguageExplanation String?  @map("plain_language_explanation")
+  createdAt               DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, testDate])
+  @@map("lab_results")
+}
+
+model SymptomEntry {
+  id                  String    @id @default(uuid())
+  userId              String    @map("user_id")
+  entryDate           DateTime  @map("entry_date")
+  entryTime           String?   @map("entry_time")
+  mood                String?
+  energy              String?
+  sleepQuality        String?   @map("sleep_quality")
+  painLevel           Int?      @map("pain_level")
+  symptoms            Json?
+  freeText            String?   @map("free_text")
+  voiceTranscription  String?   @map("voice_transcription")
+  entryMethod         String?   @map("entry_method")
+  createdAt           DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, entryDate])
+  @@map("symptom_entries")
+}
+
+model Document {
+  id            String    @id @default(uuid())
+  userId        String    @map("user_id")
+  documentType  String?   @map("document_type")
+  title         String
+  fileUrl       String    @map("file_url")
+  ocrText       String?   @map("ocr_text")
+  metadata      Json?
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("documents")
+}
+
+model Notification {
+  id                String    @id @default(uuid())
+  userId            String    @map("user_id")
+  notificationType  String    @map("notification_type")
+  title             String
+  body              String?
+  referenceId       String?   @map("reference_id")
+  referenceType     String?   @map("reference_type")
+  scheduledFor      DateTime? @map("scheduled_for")
+  sentAt            DateTime? @map("sent_at")
+  readAt            DateTime? @map("read_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, sentAt])
+  @@map("notifications")
+}
+
+model UserPreference {
+  id                        String   @id @default(uuid())
+  userId                    String   @unique @map("user_id")
+  notificationMedications   Boolean  @default(true) @map("notification_medications")
+  notificationAppointments  Boolean  @default(true) @map("notification_appointments")
+  notificationSymptomCheck  Boolean  @default(true) @map("notification_symptom_check")
+  fontSize                  String   @default("medium") @map("font_size")
+  highContrast              Boolean  @default(false) @map("high_contrast")
+  createdAt                 DateTime @default(now()) @map("created_at")
+  updatedAt                 DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
+
+// ============================================
+// PREGNANCY MODULE
+// ============================================
+
+model PregnancyProfile {
+  id                      String    @id @default(uuid())
+  userId                  String    @map("user_id")
+  dueDate                 DateTime? @map("due_date")
+  lastMenstrualPeriod     DateTime? @map("last_menstrual_period")
+  pregnancyType           String    @default("singleton") @map("pregnancy_type")
+  isHighRisk              Boolean   @default(false) @map("is_high_risk")
+  highRiskConditions      String[]  @map("high_risk_conditions")
+  obName                  String?   @map("ob_name")
+  obPhone                 String?   @map("ob_phone")
+  obEmail                 String?   @map("ob_email")
+  mfmName                 String?   @map("mfm_name")
+  mfmPhone                String?   @map("mfm_phone")
+  hospitalPreference      String?   @map("hospital_preference")
+  bloodType               String?   @map("blood_type")
+  rhFactor                String?   @map("rh_factor")
+  allergies               String[]
+  emergencyContact1Name   String?   @map("emergency_contact_1_name")
+  emergencyContact1Phone  String?   @map("emergency_contact_1_phone")
+  emergencyContact1Rel    String?   @map("emergency_contact_1_relationship")
+  emergencyContact2Name   String?   @map("emergency_contact_2_name")
+  emergencyContact2Phone  String?   @map("emergency_contact_2_phone")
+  emergencyContact2Rel    String?   @map("emergency_contact_2_relationship")
+  status                  String    @default("active") // active, archived, completed
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relations
+  symptomEntries   PregnancySymptomEntry[]
+  medications      PregnancyMedication[]
+  medicationLogs   PregnancyMedicationLog[]
+  bpLogs           BloodPressureLog[]
+  bloodSugarLogs   BloodSugarLog[]
+  weightLogs       WeightLog[]
+  fetalMovementLogs FetalMovementLog[]
+  appointments     PregnancyAppointment[]
+  concerns         PregnancyConcern[]
+  reports          ProviderReport[]
+  caregivers       PregnancyCaregiverAccess[]
+  discreteMode     DiscreteModeSetting?
+
+  @@index([userId, status])
+  @@map("pregnancy_profiles")
+}
+
+model PregnancySymptomEntry {
+  id                String    @id @default(uuid())
+  userId            String    @map("user_id")
+  pregnancyId       String    @map("pregnancy_id")
+  entryDate         DateTime  @map("entry_date")
+  entryTime         String?   @map("entry_time")
+  timeOfDay         String?   @map("time_of_day")
+  nauseaSeverity    Int?      @map("nausea_severity")
+  vomitingCount     Int       @default(0) @map("vomiting_count")
+  dizzinessSeverity Int?      @map("dizziness_severity")
+  headacheSeverity  Int?      @map("headache_severity")
+  swellingLocations String[]  @map("swelling_locations")
+  swellingSeverity  Int?      @map("swelling_severity")
+  fatigueSeverity   Int?      @map("fatigue_severity")
+  sleepQuality      Int?      @map("sleep_quality")
+  mood              String?
+  appetite          String?
+  waterGlasses      Int?      @map("water_glasses")
+  painLevel         Int?      @map("pain_level")
+  painLocations     String[]  @map("pain_locations")
+  notesForDoctor    String?   @map("notes_for_doctor")
+  freeText          String?   @map("free_text")
+  entryMethod       String?   @map("entry_method")
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pregnancy  PregnancyProfile  @relation(fields: [pregnancyId], references: [id], onDelete: Cascade)
+
+  @@index([userId, entryDate])
+  @@index([pregnancyId])
+  @@map("pregnancy_symptom_entries")
+}
+
+model PregnancyMedication {
+  id                 String    @id @default(uuid())
+  userId             String    @map("user_id")
+  pregnancyId        String    @map("pregnancy_id")
+  name               String
+  dosage             String?
+  dosageUnit         String?   @map("dosage_unit")
+  frequency          String?
+  times              String[]
+  purpose            String?
+  foodRequirement    String?   @map("food_requirement")
+  commonSideEffects  String[]  @map("common_side_effects")
+  startDate          DateTime? @map("start_date")
+  endDate            DateTime? @map("end_date")
+  isActive           Boolean   @default(true) @map("is_active")
+  supplyQuantity     Int?      @map("supply_quantity")
+  supplyRemaining    Int?      @map("supply_remaining")
+  refillDate         DateTime? @map("refill_date")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pregnancy  PregnancyProfile  @relation(fields: [pregnancyId], references: [id], onDelete: Cascade)
+  logs       PregnancyMedicationLog[]
+
+  @@index([userId, isActive])
+  @@index([pregnancyId])
+  @@map("pregnancy_medications")
+}
+
+model PregnancyMedicationLog {
+  id                String    @id @default(uuid())
+  medicationId      String    @map("medication_id")
+  userId            String    @map("user_id")
+  pregnancyId       String    @map("pregnancy_id")
+  scheduledTime     DateTime? @map("scheduled_time")
+  actualTime        DateTime? @map("actual_time")
+  status            String    // taken, skipped, snoozed, missed
+  sideEffectsNoted  String[]  @map("side_effects_noted")
+  notes             String?
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  medication PregnancyMedication @relation(fields: [medicationId], references: [id], onDelete: Cascade)
+  user       User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pregnancy  PregnancyProfile    @relation(fields: [pregnancyId], references: [id], onDelete: Cascade)
+
+  @@index([userId, scheduledTime])
+  @@index([medicationId])
+  @@map("pregnancy_medication_logs")
+}
+
+model BloodPressureLog {
+  id           String    @id @default(uuid())
+  userId       String    @map("user_id")
+  pregnancyId  String    @map("pregnancy_id")
+  logDate      DateTime  @map("log_date")
+  logTime      String    @map("log_time")
+  systolic     Int
+  diastolic    Int
+  heartRate    Int?      @map("heart_rate")
+  notes        String?
+  isFlagged    Boolean   @default(false) @map("is_flagged")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pregnancy  PregnancyProfile  @relation(fields: [pregnancyId], references: [id], onDelete: Cascade)
+
+  @@index([userId, logDate])
+  @@index([pregnancyId])
+  @@map("blood_pressure_logs")
+}
+
+model BloodSugarLog {
+  id               String    @id @default(uuid())
+  userId           String    @map("user_id")
+  pregnancyId      String    @map("pregnancy_id")
+  logDate          DateTime  @map("log_date")
+  logTime          String    @map("log_time")
+  readingType      String    @map("reading_type") // fasting, pre_meal, post_breakfast, etc.
+  bloodSugarValue  Decimal   @map("blood_sugar_value")
+  mealDescription  String?   @map("meal_description")
+  carbCount        Int?      @map("carb_count")
+  insulinDose      Decimal?  @map("insulin_dose")
+  insulinType      String?   @map("insulin_type")
+  notes            String?
+  isFlagged        Boolean   @default(false) @map("is_flagged")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pregnancy  PregnancyProfile  @relation(fields: [pregnancyId], references: [id], onDelete: Cascade)
+
+  @@index([userId, logDate])
+  @@index([pregnancyId])
+  @@map("blood_sugar_logs")
+}
+
+model WeightLog {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  pregnancyId String    @map("pregnancy_id")
+  logDate     DateTime  @map("log_date")
+  weightLbs   Decimal?  @map("weight_lbs")
+  weightKg    Decimal?  @map("weight_kg")
+  notes       String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pregnancy  PregnancyProfile  @relation(fields: [pregnancyId], references: [id], onDelete: Cascade)
+
+  @@index([userId, logDate])
+  @@index([pregnancyId])
+  @@map("weight_logs")
+}
+
+model FetalMovementLog {
+  id                    String    @id @default(uuid())
+  userId                String    @map("user_id")
+  pregnancyId           String    @map("pregnancy_id")
+  logDate               DateTime  @map("log_date")
+  logTime               String    @map("log_time")
+  sessionDurationMinutes Int?     @map("session_duration_minutes")
+  kickCount             Int?
+  notes                 String?
+  createdAt             DateTime  @default(now()) @map("created_at")
+
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pregnancy  PregnancyProfile  @relation(fields: [pregnancyId], references: [id], onDelete: Cascade)
+
+  @@index([userId, logDate])
+  @@index([pregnancyId])
+  @@map("fetal_movement_logs")
+}
+
+model PregnancyAppointment {
+  id                    String    @id @default(uuid())
+  userId                String    @map("user_id")
+  pregnancyId           String    @map("pregnancy_id")
+  appointmentType       String    @map("appointment_type")
+  providerName          String?   @map("provider_name")
+  providerSpecialty     String?   @map("provider_specialty")
+  locationName          String?   @map("location_name")
+  locationAddress       String?   @map("location_address")
+  appointmentDate       DateTime  @map("appointment_date")
+  appointmentTime       String?   @map("appointment_time")
+  purpose               String?
+  preVisitNotes         String?   @map("pre_visit_notes")
+  postVisitNotes        String?   @map("post_visit_notes")
+  doctorSaid            String?   @map("doctor_said")
+  followUpInstructions  String?   @map("follow_up_instructions")
+  nextAppointment       DateTime? @map("next_appointment")
+  status                String    @default("scheduled")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pregnancy  PregnancyProfile  @relation(fields: [pregnancyId], references: [id], onDelete: Cascade)
+
+  @@index([userId, appointmentDate])
+  @@index([pregnancyId])
+  @@map("pregnancy_appointments")
+}
+
+model PregnancyConcern {
+  id              String    @id @default(uuid())
+  userId          String    @map("user_id")
+  pregnancyId     String    @map("pregnancy_id")
+  concernText     String    @map("concern_text")
+  severity        String?   // low, medium, high, urgent
+  dateRaised      DateTime  @default(now()) @map("date_raised")
+  addressed       Boolean   @default(false)
+  addressedDate   DateTime? @map("addressed_date")
+  addressedAtVisit String?  @map("addressed_at_visit")
+  notes           String?
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pregnancy  PregnancyProfile  @relation(fields: [pregnancyId], references: [id], onDelete: Cascade)
+
+  @@index([userId, addressed])
+  @@index([pregnancyId])
+  @@map("pregnancy_concerns")
+}
+
+model ProviderReport {
+  id              String    @id @default(uuid())
+  userId          String    @map("user_id")
+  pregnancyId     String    @map("pregnancy_id")
+  reportDate      DateTime  @map("report_date")
+  dateRangeStart  DateTime  @map("date_range_start")
+  dateRangeEnd    DateTime  @map("date_range_end")
+  sectionsIncluded Json     @map("sections_included")
+  reportData      Json      @map("report_data")
+  pdfUrl          String?   @map("pdf_url")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pregnancy  PregnancyProfile  @relation(fields: [pregnancyId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([pregnancyId])
+  @@map("provider_reports")
+}
+
+model PregnancyCaregiverAccess {
+  id              String    @id @default(uuid())
+  patientId       String    @map("patient_id")
+  caregiverId     String    @map("caregiver_id")
+  pregnancyId     String    @map("pregnancy_id")
+  relationship    String?
+  permissions     Json      @default("{\"view_medications\": true, \"view_symptoms\": false, \"view_vitals\": true, \"view_appointments\": true, \"receive_alerts\": true, \"view_journal_notes\": false}")
+  alertThresholds Json      @default("{\"bp_systolic_high\": 140, \"bp_diastolic_high\": 90, \"medication_missed\": true, \"severe_symptom\": true}")
+  status          String    @default("active") // active, pending, revoked
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  patient    User              @relation("PatientUser", fields: [patientId], references: [id], onDelete: Cascade)
+  caregiver  User              @relation("CaregiverUser", fields: [caregiverId], references: [id], onDelete: Cascade)
+  pregnancy  PregnancyProfile  @relation(fields: [pregnancyId], references: [id], onDelete: Cascade)
+
+  @@unique([patientId, caregiverId])
+  @@index([patientId])
+  @@map("pregnancy_caregiver_access")
+}
+
+model DiscreteModeSetting {
+  id                 String   @id @default(uuid())
+  userId             String   @unique @map("user_id")
+  pregnancyId        String   @unique @map("pregnancy_id")
+  isEnabled          Boolean  @default(false) @map("is_enabled")
+  appName            String   @default("Health Tracker") @map("app_name")
+  appIcon            String   @default("neutral") @map("app_icon")
+  notificationText   String   @default("Reminder") @map("notification_text")
+  hideFromRecents    Boolean  @default(false) @map("hide_from_recents")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pregnancy  PregnancyProfile  @relation(fields: [pregnancyId], references: [id], onDelete: Cascade)
+
+  @@map("discrete_mode_settings")
+}

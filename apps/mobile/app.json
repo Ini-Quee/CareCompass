@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "CareCompass",
+    "slug": "carecompass",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FDF2F8"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.carecompass.app",
+      "infoPlist": {
+        "NSHealthShareUsageDescription": "CareCompass needs access to health data to track your pregnancy.",
+        "NSHealthUpdateUsageDescription": "CareCompass needs to save health data to track your pregnancy."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FDF2F8"
+      },
+      "package": "com.carecompass.app",
+      "permissions": ["RECEIVE_BOOT_COMPLETED", "SCHEDULE_EXACT_ALARM"]
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#DB2777"
+        }
+      ]
+    ],
+    "scheme": "carecompass"
+  }
+}
