@@ -47,8 +47,20 @@ model User {
   preferences           UserPreference?
   
   // Pregnancy relations
-  pregnancyProfiles     PregnancyProfile[]
-  caregiverFor          PregnancyCaregiverAccess[] @relation("CaregiverUser")
+  pregnancyProfiles         PregnancyProfile[]
+  pregnancySymptomEntries   PregnancySymptomEntry[]
+  pregnancyMedications      PregnancyMedication[]
+  pregnancyMedicationLogs   PregnancyMedicationLog[]
+  bloodPressureLogs         BloodPressureLog[]
+  bloodSugarLogs            BloodSugarLog[]
+  weightLogs                WeightLog[]
+  fetalMovementLogs         FetalMovementLog[]
+  pregnancyAppointments     PregnancyAppointment[]
+  pregnancyConcerns         PregnancyConcern[]
+  providerReports           ProviderReport[]
+  caregiverFor              PregnancyCaregiverAccess[] @relation("CaregiverUser")
+  patientCaregivers         PregnancyCaregiverAccess[] @relation("PatientUser")
+  discreteModeSettings      DiscreteModeSetting[]
 
   @@map("users")
 }

@@ -41,7 +41,7 @@ export class VitalsService {
     return this.prisma.bloodPressureLog.findMany({
       where: {
         pregnancyId,
-        logDate: { ggte: startDate },
+        logDate: { gte: startDate },
       },
       orderBy: { logDate: 'desc' },
     });
