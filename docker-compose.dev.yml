@@ -1,0 +1,64 @@
+# CareCompass Development Environment
+# This file sets up PostgreSQL and Redis for local development
+
+services:
+  # ============================================
+  # POSTGRESQL DATABASE
+  # ============================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: carecompass-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: carecompass
+      POSTGRES_PASSWORD: carecompass_dev_2026
+      POSTGRES_DB: carecompass
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U carecompass"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ============================================
+  # REDIS CACHE
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: carecompass-redis
+    restart: unless-stopped
+    command: redis-server --requirepass carecompass_dev_2026
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "carecompass_dev_2026", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ============================================
+  # PGADMIN (Database Management UI)
+  # ============================================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: carecompass-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@carecompass.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local

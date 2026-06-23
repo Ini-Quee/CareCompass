@@ -1,0 +1,25 @@
+FROM node:20-alpine
+
+# Install dependencies for Prisma and other native modules
+RUN apk add --no-cache libc6-compat openssl
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json ./
+COPY apps/api/package.json ./apps/api/
+
+# Install dependencies
+RUN npm install
+
+# Copy source code
+COPY apps/api ./apps/api
+
+# Generate Prisma client
+RUN cd apps/api && npx prisma generate
+
+# Expose port
+EXPOSE 3001
+
+# Start the API in development mode
+CMD ["npm", "run", "dev:api"]
